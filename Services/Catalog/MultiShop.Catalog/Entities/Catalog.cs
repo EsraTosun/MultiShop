@@ -8,7 +8,11 @@ namespace MultiShop.Catalog.Entites
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; }
-        public string CategoryName { get; set; }
-        public string ImageUrl { get; set; }
+
+        [BsonElement("CategoryName")]
+        public string CategoryName { get; set; } = string.Empty;
+
+        [BsonElement("ImageUrl")]
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

@@ -1,6 +1,9 @@
-using AutoMapper;
+﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using MultiShop.Catalog.Extensions;
+using MultiShop.Catalog.Filters;
 using MultiShop.Catalog.Services.AboutServices;
 using MultiShop.Catalog.Services.BrandServices;
 using MultiShop.Catalog.Services.CategoryServices;
@@ -53,10 +56,20 @@ builder.Services.AddScoped<IDatabaseSettings>(sp =>
     return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
+
+builder.Services.AddCatalogValidators();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<SwaggerResponseOperationFilter>();
+});
 
 var app = builder.Build();
 

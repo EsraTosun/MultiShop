@@ -8,9 +8,17 @@ namespace MultiShop.Catalog.Entites
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string OfferDiscountId { get; set; }
-        public string Title { get; set; }
-        public string SubTitle { get; set; }
-        public string ImageUrl { get; set; }
-        public string ButtonTitle { get; set; }
+
+        [BsonElement("Title")]
+        public string Title { get; set; } = string.Empty;
+
+        [BsonElement("SubTitle")]
+        public string SubTitle { get; set; } = string.Empty;
+
+        [BsonElement("ImageUrl")]
+        public string ImageUrl { get; set; } = string.Empty;
+
+        [BsonElement("ButtonTitle")]
+        public string ButtonTitle { get; set; } = string.Empty;
     }
 }

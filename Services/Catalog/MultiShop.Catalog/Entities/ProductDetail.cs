@@ -8,9 +8,14 @@ namespace MultiShop.Catalog.Entites
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ProductDetailId { get; set; }
-        public string ProductDescription { get; set; }
-        public string ProductInfo { get; set; }
-        public string ProductId { get; set; }
+
+        [BsonElement("ProductDescription")]
+        public string ProductDescription { get; set; } = string.Empty;
+
+        [BsonElement("ProductInfo")]
+        public string ProductInfo { get; set; } = string.Empty;
+
+        public string ProductId { get; set; } = string.Empty;
 
         [BsonIgnore]
         public Product Product { get; set; }
