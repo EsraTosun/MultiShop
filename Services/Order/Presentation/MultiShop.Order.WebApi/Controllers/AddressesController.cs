@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MultiShop.Order.Application.Features.CQRS.Commands.AddressCommands;
-using MultiShop.Order.Application.Features.CQRS.Handlers.AddressHandlers;
-using MultiShop.Order.Application.Features.CQRS.Queries.AddressQueries;
+using MultiShop.Order.Application.Features.Addresses.Commands.Create;
+using MultiShop.Order.Application.Features.Addresses.Queries.GetById;
+using MultiShop.Order.Application.Features.Addresses.Commands.Update;
+using MultiShop.Order.Application.Features.Addresses.Commands.Remove;
+
+using System.Threading.Tasks;
+using MultiShop.Order.Application.Features.Addresses.Queries.GetAll;
 
 namespace MultiShop.Order.WebApi.Controllers
 {
@@ -12,52 +16,46 @@ namespace MultiShop.Order.WebApi.Controllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly GetAddressQueryHandler _getAddressQueryHandler;
-        private readonly GetAddressByIdQueryHandler _getAddressByIdQueryHandler;
-        private readonly CreateAddressCommandHandler _createAddressCommandHandler;
-        private readonly UpdateAddressCommandHandler _updateAddressCommandHandler;
-        private readonly RemoveAddressCommandHandler _removeAddressCommandHandler;
-        public AddressesController(GetAddressQueryHandler getAddressQueryHandler, GetAddressByIdQueryHandler getAddressByIdQueryHandler, CreateAddressCommandHandler createAddressCommandHandler, UpdateAddressCommandHandler updateAddressCommandHandler, RemoveAddressCommandHandler removeAddressCommandHandler)
+        private readonly IMediator _mediator;
+
+        public AddressesController(IMediator mediator)
         {
-            _getAddressQueryHandler = getAddressQueryHandler;
-            _getAddressByIdQueryHandler = getAddressByIdQueryHandler;
-            _createAddressCommandHandler = createAddressCommandHandler;
-            _updateAddressCommandHandler = updateAddressCommandHandler;
-            _removeAddressCommandHandler = removeAddressCommandHandler;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> AddressList()
         {
-            var values = await _getAddressQueryHandler.Handle();
+            var values = await _mediator.Send(new GetAddressesQuery());
             return Ok(values);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAddressById(int id)
         {
-            var values = await _getAddressByIdQueryHandler.Handle(new GetAddressByIdQuery(id));
+            var values = await _mediator.Send(new GetAddressByIdQuery(id));
+            if (values == null) return NotFound();
             return Ok(values);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAddress(CreateAddressCommand command)
         {
-            await _createAddressCommandHandler.Handle(command);
+            await _mediator.Send(command);
             return Ok("Adres bilgisi başarıyla eklendi");
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateAddress(UpdateAddressCommand command)
         {
-            await _updateAddressCommandHandler.Handle(command);
+            await _mediator.Send(command);
             return Ok("Adres bilgisi başarıyla güncellendi");
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveAddress(int id)
         {
-            await _removeAddressCommandHandler.Handle(new RemoveAddressCommand(id));
+            await _mediator.Send(new RemoveAddressCommand(id));
             return Ok("Adres başarıyla silindi");
         }
     }

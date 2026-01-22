@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using MultiShop.Order.Application.Features.Mediator.Commands.OrderingCommands;
 using MultiShop.Order.Application.Features.Mediator.Queries.OrderingQueries;
-using System.Security;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MultiShop.Order.WebApi.Controllers
 {
@@ -14,6 +14,7 @@ namespace MultiShop.Order.WebApi.Controllers
     public class OrderingsController : ControllerBase
     {
         private readonly IMediator _mediator;
+
         public OrderingsController(IMediator mediator)
         {
             _mediator = mediator;
@@ -29,8 +30,9 @@ namespace MultiShop.Order.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderingById(int id)
         {
-            var values = await _mediator.Send(new GetOrderingByIdQuery(id));
-            return Ok(values);
+            var value = await _mediator.Send(new GetOrderingByIdQuery(id));
+            if (value == null) return NotFound($"Sipariş bulunamadı: {id}");
+            return Ok(value);
         }
 
         [HttpPost]
@@ -40,13 +42,6 @@ namespace MultiShop.Order.WebApi.Controllers
             return Ok("Sipariş başarıyla eklendi");
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveOrdering(int id)
-        {
-            await _mediator.Send(new RemoveOrderingCommand(id));
-            return Ok("Sipariş başarıyla silindi");
-        }
-
         [HttpPut]
         public async Task<IActionResult> UpdateOrdering(UpdateOrderingCommand command)
         {
@@ -54,10 +49,18 @@ namespace MultiShop.Order.WebApi.Controllers
             return Ok("Sipariş başarıyla güncellendi");
         }
 
-        [HttpGet("GetOrderingByUserId/{id}")]
-        public async Task<IActionResult> GetOrderingByUserId(string id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveOrdering(int id)
         {
-            var values = await _mediator.Send(new GetOrderingByUserIdQuery(id));
+            await _mediator.Send(new RemoveOrderingCommand(id));
+            return Ok("Sipariş başarıyla silindi");
+        }
+
+        [HttpGet("GetOrderingByUserId/{userId}")]
+        public async Task<IActionResult> GetOrderingByUserId(string userId)
+        {
+            var values = await _mediator.Send(new GetOrderingByUserIdQuery(userId));
+            if (values == null || !values.Any()) return NotFound($"Kullanıcıya ait sipariş bulunamadı: {userId}");
             return Ok(values);
         }
     }

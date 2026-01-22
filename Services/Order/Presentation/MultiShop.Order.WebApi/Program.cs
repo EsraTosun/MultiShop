@@ -1,49 +1,62 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MultiShop.Order.Application.Features.CQRS.Handlers.AddressHandlers;
-using MultiShop.Order.Application.Features.CQRS.Handlers.OrderDetailHandlers;
+using Microsoft.Extensions.DependencyInjection;
+using MultiShop.Order.Application.Features.Addresses.Commands.Create;
+using MultiShop.Order.Application.Features.Addresses.Queries.GetAll;
+using MultiShop.Order.Application.Features.OrderDetails.Commands.Create;
+using MultiShop.Order.Application.Features.OrderDetails.Queries.GetAll;
 using MultiShop.Order.Application.Interfaces;
+using MultiShop.Order.Application.Mapping;
 using MultiShop.Order.Application.Services;
 using MultiShop.Order.Persistence.Context;
 using MultiShop.Order.Persistence.Repositories;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-{
-    opt.Authority = builder.Configuration["IdentityServerUrl"];
-    opt.Audience = "ResourceOrder";
-    opt.RequireHttpsMetadata = false;
-});
+// ===== Authentication =====
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = builder.Configuration["IdentityServerUrl"];
+        opt.Audience = "ResourceOrder";
+        opt.RequireHttpsMetadata = false;
+    });
 
-
+// ===== DbContext =====
 builder.Services.AddDbContext<OrderContext>();
 
+// ===== Repositories =====
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped(typeof(IOrderingRepository), typeof(OrderingRepository));
+builder.Services.AddScoped<IOrderingRepository, OrderingRepository>();
+
+// ===== Application Services =====
 builder.Services.AddApplicationService();
 
-#region
-builder.Services.AddScoped<GetAddressQueryHandler>();
-builder.Services.AddScoped<GetAddressByIdQueryHandler>();
-builder.Services.AddScoped<CreateAddressCommandHandler>();
-builder.Services.AddScoped<UpdateAddressCommandHandler>();
-builder.Services.AddScoped<RemoveAddressCommandHandler>();
+// ===== AutoMapper =====
+builder.Services.AddAutoMapper(typeof(GeneralMapping)); // GeneralMapping Profile'ýný ekledik
 
-builder.Services.AddScoped<GetOrderDetailQueryHandler>();
-builder.Services.AddScoped<GetOrderDetailByIdQueryHandler>();
-builder.Services.AddScoped<CreateOrderDetailCommandHandler>();
-builder.Services.AddScoped<UpdateOrderDetailCommandHandler>();
-builder.Services.AddScoped<RemoveOrderDetailCommandHandler>();
-#endregion
+// ===== MediatR =====
+builder.Services.AddMediatR(cfg =>
+{
+    // Assembly yerine handler’lardan bir tip veriyoruz
+    cfg.RegisterServicesFromAssemblyContaining<CreateOrderDetailCommand>();
+    cfg.RegisterServicesFromAssemblyContaining<GetOrderDetailsQuery>();
+    cfg.RegisterServicesFromAssemblyContaining<CreateAddressCommand>();
+    cfg.RegisterServicesFromAssemblyContaining<GetAddressesQuery>();
+});// Bu sayede tüm IRequest/IRequestHandler sýnýflarý otomatik bulunur
+// Artýk handler'larý tek tek eklemene gerek yok
 
+// ===== Controllers =====
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// ===== Swagger =====
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ===== Middleware =====
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -51,7 +64,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
