@@ -1,27 +1,22 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using MultiShop.Order.Application.Features.Addresses.Commands.Create;
-using MultiShop.Order.Application.Features.Addresses.Queries.GetAll;
-using MultiShop.Order.Application.Features.OrderDetails.Commands.Create;
-using MultiShop.Order.Application.Features.OrderDetails.Queries.GetAll;
+using Microsoft.OpenApi.Models;
 using MultiShop.Order.Application.Interfaces;
 using MultiShop.Order.Application.Mapping;
 using MultiShop.Order.Application.Services;
 using MultiShop.Order.Persistence.Context;
 using MultiShop.Order.Persistence.Repositories;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ===== Authentication =====
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt =>
-    {
-        opt.Authority = builder.Configuration["IdentityServerUrl"];
-        opt.Audience = "ResourceOrder";
-        opt.RequireHttpsMetadata = false;
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(opt =>
+//    {
+//        opt.Authority = builder.Configuration["IdentityServerUrl"];
+//        opt.Audience = "ResourceOrder";
+//        opt.RequireHttpsMetadata = false;
+//    });
 
 // ===== DbContext =====
 builder.Services.AddDbContext<OrderContext>();
@@ -39,20 +34,43 @@ builder.Services.AddAutoMapper(typeof(GeneralMapping)); // GeneralMapping Profil
 // ===== MediatR =====
 builder.Services.AddMediatR(cfg =>
 {
-    // Assembly yerine handler’lardan bir tip veriyoruz
-    cfg.RegisterServicesFromAssemblyContaining<CreateOrderDetailCommand>();
-    cfg.RegisterServicesFromAssemblyContaining<GetOrderDetailsQuery>();
-    cfg.RegisterServicesFromAssemblyContaining<CreateAddressCommand>();
-    cfg.RegisterServicesFromAssemblyContaining<GetAddressesQuery>();
-});// Bu sayede tüm IRequest/IRequestHandler sýnýflarý otomatik bulunur
-// Artýk handler'larý tek tek eklemene gerek yok
+    cfg.RegisterServicesFromAssemblyContaining<GeneralMapping>();
+});
 
 // ===== Controllers =====
 builder.Services.AddControllers();
 
 // ===== Swagger =====
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "MultiShop Order API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Token girin. Örnek: Bearer {token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -64,8 +82,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.MapControllers();
 

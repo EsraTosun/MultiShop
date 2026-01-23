@@ -31,11 +31,18 @@ namespace MultiShop.Order.Application.Mapping
             CreateMap<CreateOrderDetailCommand, OrderDetail>();
             CreateMap<UpdateOrderDetailCommand, OrderDetail>();
 
-            CreateMap<CreateAddressCommand, Domain.Entities.Address>();
-            CreateMap<UpdateAddressCommand, Domain.Entities.Address>();
+            CreateMap<CreateAddressCommand, Address>();
+            CreateMap<UpdateAddressCommand, Address>();
 
             CreateMap<CreateOrderingCommand, Ordering>();
             CreateMap<UpdateOrderingCommand, Ordering>();
+
+            CreateMap<Address, AddressListDto>().ReverseMap();
+            CreateMap<Address, AddressDetailDto>().ReverseMap();
+
+            CreateMap<OrderDetail, OrderDetailDto>().ReverseMap();
+            CreateMap<Ordering, OrderingDto>().ReverseMap();
+            CreateMap<Ordering, OrderingDetailDto>().ReverseMap();
         }
     }
 }

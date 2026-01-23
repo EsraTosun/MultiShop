@@ -5,13 +5,11 @@ using MultiShop.Order.Application.Features.Addresses.Commands.Create;
 using MultiShop.Order.Application.Features.Addresses.Queries.GetById;
 using MultiShop.Order.Application.Features.Addresses.Commands.Update;
 using MultiShop.Order.Application.Features.Addresses.Commands.Remove;
-
-using System.Threading.Tasks;
 using MultiShop.Order.Application.Features.Addresses.Queries.GetAll;
 
 namespace MultiShop.Order.WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AddressesController : ControllerBase

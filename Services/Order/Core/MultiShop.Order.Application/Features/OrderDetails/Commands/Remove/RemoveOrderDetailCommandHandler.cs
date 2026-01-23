@@ -1,4 +1,5 @@
-﻿using MultiShop.Order.Application.Features.Addresses.Commands.Remove;
+﻿using MediatR;
+using MultiShop.Order.Application.Features.Addresses.Commands.Remove;
 using MultiShop.Order.Application.Interfaces;
 using MultiShop.Order.Domain.Entities;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Net;
 namespace MultiShop.Order.Application.Features.OrderDetails.Commands.Update
 {
     public class RemoveOrderDetailCommandHandler
+        : IRequestHandler<RemoveOrderDetailCommand>
     {
         private readonly IRepository<OrderDetail> _repository;
         public RemoveOrderDetailCommandHandler(IRepository<OrderDetail> repository)
@@ -15,7 +17,7 @@ namespace MultiShop.Order.Application.Features.OrderDetails.Commands.Update
         }
 
         public async Task Handle(
-            RemoveAddressCommand request,
+            RemoveOrderDetailCommand request,
             CancellationToken cancellationToken)
         {
             var orderDetail = await _repository.GetByIdAsync(request.Id);
