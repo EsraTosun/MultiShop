@@ -9,7 +9,7 @@ using MultiShop.Order.Application.Features.Addresses.Queries.GetAll;
 
 namespace MultiShop.Order.WebApi.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AddressesController : ControllerBase
