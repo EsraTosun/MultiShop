@@ -35,6 +35,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // -----------------------------
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
+    options.User.RequireUniqueEmail = true; 
+    //options.SignIn.RequireConfirmedEmail = true; 
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
@@ -53,12 +55,13 @@ builder.Services.AddIdentityServer(options =>
     options.Events.RaiseFailureEvents = true;
     options.Events.RaiseSuccessEvents = true;
 })
-    .AddAspNetIdentity<ApplicationUser>()
-    .AddInMemoryIdentityResources(Config.IdentityResources)
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryApiResources(Config.ApiResources) 
-    .AddInMemoryClients(Config.Clients)
-    .AddDeveloperSigningCredential(); // Dev only
+.AddAspNetIdentity<ApplicationUser>()
+.AddInMemoryIdentityResources(Config.IdentityResources)
+.AddInMemoryApiScopes(Config.ApiScopes)
+.AddInMemoryApiResources(Config.ApiResources) 
+.AddInMemoryClients(Config.Clients)
+.AddDeveloperSigningCredential(); // Dev only
+
 
 
 // -----------------------------
