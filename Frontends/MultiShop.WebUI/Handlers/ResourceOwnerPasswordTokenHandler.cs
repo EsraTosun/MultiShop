@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 
 namespace MultiShop.WebUI.Handlers
@@ -16,20 +16,17 @@ namespace MultiShop.WebUI.Handlers
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var token = _httpContextAccessor.HttpContext?
-                .Request
-                .Cookies["MultiShopJwt"];
+            var accessToken = await _httpContextAccessor.HttpContext!
+                .GetTokenAsync("access_token");
 
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(accessToken))
             {
                 request.Headers.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                    new AuthenticationHeaderValue("Bearer", accessToken);
             }
-            // Token yoksa, sadece istek göndermeyi dene
-            // veya null/empty olarak bırak
-            // API 401 dönerse controller tarafında handle edilir
 
             return await base.SendAsync(request, cancellationToken);
         }
     }
+
 }

@@ -36,7 +36,7 @@ namespace MultiShop.WebUI.Services.Concrete
                 ["grant_type"] = "client_credentials",
                 ["client_id"] = _clientSettings.MultiShopVisitorClient.ClientId,
                 ["client_secret"] = _clientSettings.MultiShopVisitorClient.ClientSecret,
-                ["scope"] = "MultiShopVisitor"
+                ["scope"] = "Catalog.Read Image.Full Comment.Full Ocelot.Full"
             };
 
             var response = await _httpClient.PostAsync(

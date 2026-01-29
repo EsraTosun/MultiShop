@@ -97,8 +97,17 @@ namespace MultiShop.WebUI.Services.Concrete
                 ["client_secret"] = _clientSettings.MultiShopManagerClient.ClientSecret,
                 ["username"] = signInDto.Username,
                 ["password"] = signInDto.Password,
-                ["scope"] = "openid profile email"
             };
+
+            var clientId = _clientSettings.MultiShopManagerClient.ClientId;
+            var clientSecret = _clientSettings.MultiShopManagerClient.ClientSecret;
+
+            // TEMP DEBUG
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+            {
+                throw new Exception($"CLIENT SETTINGS NULL ❌ | clientId='{clientId}', secret='{clientSecret}'");
+            }
+
 
             var response = await _httpClient.PostAsync(
                 tokenEndpoint,

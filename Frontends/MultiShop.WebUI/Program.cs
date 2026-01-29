@@ -30,7 +30,15 @@ using MultiShop.WebUI.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region Authentication (ONLY COOKIE)
+#region Api Base Settings (ÖNCE!)
+
+var values = builder.Configuration
+    .GetSection("ServiceApiSettings")
+    .Get<ServiceApiSettings>();
+
+#endregion
+
+#region Authentication (COOKIE ONLY)
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(opt =>
@@ -42,7 +50,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     opt.SlidingExpiration = true;
     opt.Cookie.Name = "MultiShopCookie";
     opt.Cookie.HttpOnly = true;
-    opt.Cookie.SameSite = SameSiteMode.Strict;
+    opt.Cookie.SameSite = SameSiteMode.Lax; // DEV için önerilen
 });
 
 #endregion
@@ -64,25 +72,23 @@ builder.Services.Configure<ServiceApiSettings>(
 
 builder.Services.AddScoped<ResourceOwnerPasswordTokenHandler>();
 builder.Services.AddScoped<ClientCredentialTokenHandler>();
+builder.Services.AddScoped<RefreshTokenHandler>();
 
 #endregion
 
 #region Identity & Login
 
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddHttpClient<IIdentityService, IdentityService>();
+
+builder.Services.AddHttpClient<IIdentityService, IdentityService>(opt =>
+{
+    opt.BaseAddress = new Uri(values.IdentityServerUrl);
+    opt.Timeout = TimeSpan.FromSeconds(30);
+});
 
 #endregion
 
-#region Api Base Settings
-
-var values = builder.Configuration
-    .GetSection("ServiceApiSettings")
-    .Get<ServiceApiSettings>();
-
-#endregion
-
-#region CLIENT CREDENTIAL (Visitor) - PUBLIC / CATALOG
+#region CLIENT CREDENTIAL (VISITOR / PUBLIC)
 
 builder.Services.AddHttpClient<ICategoryService, CategoryService>(opt =>
 {
@@ -141,72 +147,98 @@ builder.Services.AddHttpClient<ICommentService, CommentService>(opt =>
 
 #endregion
 
-#region RESOURCE OWNER PASSWORD (Manager/Admin) - AUTHENTICATED
+#region RESOURCE OWNER PASSWORD (AUTHENTICATED)
 
 builder.Services.AddHttpClient<IUserService, UserService>(opt =>
 {
     opt.BaseAddress = new Uri(values.IdentityServerUrl);
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IUserIdentityService, UserIdentityService>(opt =>
 {
     opt.BaseAddress = new Uri(values.IdentityServerUrl);
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IBasketService, BasketService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Basket.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IOrderOderingService, OrderOderingService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Order.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IOrderAddressService, OrderAddressService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Order.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<ICargoCompanyService, CargoCompanyService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Cargo.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<ICargoCustomerService, CargoCustomerService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Cargo.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IDiscountService, DiscountService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Discount.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IMessageService, MessageService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Message.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<ICatalogStatisticService, CatalogStatisticService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Catalog.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IDiscountStatisticService, DiscountStatisticService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Discount.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IMessageStatisticService, MessageStatisticService>(opt =>
 {
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Message.Path}");
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddHttpClient<IUserStatisticService, UserStatisticService>(opt =>
 {
     opt.BaseAddress = new Uri(values.IdentityServerUrl);
-}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+})
+.AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>()
+.AddHttpMessageHandler<RefreshTokenHandler>();
 
 #endregion
 

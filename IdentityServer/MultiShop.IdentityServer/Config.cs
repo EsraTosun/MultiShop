@@ -75,6 +75,8 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = { new Secret("manager-secret".Sha256()) },
 
+                AllowOfflineAccess = true,
+
                 AllowedScopes =
                 {
                     "Catalog.Full",
