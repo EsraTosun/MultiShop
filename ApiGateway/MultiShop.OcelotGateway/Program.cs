@@ -1,37 +1,56 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Ocelot.DependencyInjection;
+﻿using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ================= AUTH =================
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+// ----------------------
+// Configuration
+// ----------------------
+builder.Configuration
+       .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+       .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
+       .AddEnvironmentVariables();
+
+// ----------------------
+// Authentication & Authorization
+// ----------------------
+builder.Services.AddAuthentication()
     .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
         options.Authority = builder.Configuration["IdentityServerUrl"];
+        options.Audience = "ocelot.api";
         options.RequireHttpsMetadata = false;
 
-        // IdentityServer'daki LOCAL API
         options.TokenValidationParameters = new()
         {
-            ValidateAudience = false
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            NameClaimType = "name",
+            RoleClaimType = "role"
         };
     });
 
-// ================= OCELOT =================
-builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+builder.Services.AddAuthorization();
 
+// ----------------------
+// Ocelot
+// ----------------------
 builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
-// 🔴 ÇOK ÖNEMLİ
+// ----------------------
+// Middleware
+// ----------------------
 app.UseAuthentication();
 app.UseAuthorization();
 
 await app.UseOcelot();
 
-app.MapGet("/", () => "Ocelot Gateway is running 🚀");
+// ----------------------
+// Test endpoint
+// ----------------------
+app.MapGet("/", () => "Ocelot Gateway is running");
 
 app.Run();
