@@ -20,12 +20,20 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-{
-    opt.Authority = builder.Configuration["IdentityServerUrl"];
-    opt.Audience = "catalog.api";
-    opt.RequireHttpsMetadata = false;
-});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = builder.Configuration["IdentityServerUrl"];
+        opt.RequireHttpsMetadata = false;
+
+        opt.TokenValidationParameters = new()
+        {
+            ValidateAudience = false,  
+            ValidateIssuer = true,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    });
 
 builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -79,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

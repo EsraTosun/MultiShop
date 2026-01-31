@@ -2,7 +2,7 @@
   "Routes": [
     {
       "RouteKey": "CatalogService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -10,17 +10,17 @@
           "Port": 7070
         }
       ],
-      "UpstreamPathTemplate": "/services/catalog/{**everything}",
+      "UpstreamPathTemplate": "/services/catalog/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Catalog.Full", "Catalog.Read" ]
+        "AllowedScopes": [ "Catalog.Full", "Catalog.Read" ]
       }
     },
 
     {
       "RouteKey": "DiscountService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -28,17 +28,17 @@
           "Port": 7071
         }
       ],
-      "UpstreamPathTemplate": "/services/discount/{**everything}",
+      "UpstreamPathTemplate": "/services/discount/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Discount.Full" ]
+        "AllowedScopes": [ "Discount.Full" ]
       }
     },
 
     {
       "RouteKey": "OrderService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -46,17 +46,17 @@
           "Port": 7072
         }
       ],
-      "UpstreamPathTemplate": "/services/order/{**everything}",
+      "UpstreamPathTemplate": "/services/order/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Order.Full" ]
+        "AllowedScopes": [ "Order.Full" ]
       }
     },
 
     {
       "RouteKey": "CargoService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -64,17 +64,17 @@
           "Port": 7073
         }
       ],
-      "UpstreamPathTemplate": "/services/cargo/{**everything}",
+      "UpstreamPathTemplate": "/services/cargo/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Cargo.Full" ]
+        "AllowedScopes": [ "Cargo.Full" ]
       }
     },
 
     {
       "RouteKey": "BasketService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -82,17 +82,17 @@
           "Port": 7074
         }
       ],
-      "UpstreamPathTemplate": "/services/basket/{**everything}",
+      "UpstreamPathTemplate": "/services/basket/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Basket.Full" ]
+        "AllowedScopes": [ "Basket.Full" ]
       }
     },
 
     {
       "RouteKey": "CommentService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -100,17 +100,17 @@
           "Port": 7075
         }
       ],
-      "UpstreamPathTemplate": "/services/comment/{**everything}",
+      "UpstreamPathTemplate": "/services/comment/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Comment.Full" ]
+        "AllowedScopes": [ "Comment.Full" ]
       }
     },
 
     {
       "RouteKey": "PaymentService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -118,17 +118,17 @@
           "Port": 7076
         }
       ],
-      "UpstreamPathTemplate": "/services/payment/{**everything}",
+      "UpstreamPathTemplate": "/services/payment/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Payment.Full" ]
+        "AllowedScopes": [ "Payment.Full" ]
       }
     },
 
     {
       "RouteKey": "ImageService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -136,17 +136,17 @@
           "Port": 7077
         }
       ],
-      "UpstreamPathTemplate": "/services/images/{**everything}",
+      "UpstreamPathTemplate": "/services/images/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Image.Full" ]
+        "AllowedScopes": [ "Image.Full" ]
       }
     },
 
     {
       "RouteKey": "MessageService",
-      "DownstreamPathTemplate": "/api/{**everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -154,11 +154,11 @@
           "Port": 7078
         }
       ],
-      "UpstreamPathTemplate": "/services/message/{**everything}",
+      "UpstreamPathTemplate": "/services/message/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "OcelotAuthenticationScheme",
-        "AllowedScopes": [ "Ocelot.Full", "Message.Full" ]
+        "AllowedScopes": [ "Message.Full" ]
       }
     }
   ],

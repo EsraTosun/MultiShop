@@ -37,7 +37,7 @@ public static class Config
         new ApiResource[]
         {
             new("ocelot.api") { Scopes = { "Ocelot.Full" } },
-            new("catalog.api"){ Scopes = { "Catalog.Full", "Catalog.Read", "Ocelot.Full" }},
+            new("catalog.api"){ Scopes = { "Catalog.Full", "Catalog.Read"}},
             new("discount.api"){ Scopes = { "Discount.Full" }},
             new("order.api"){ Scopes = { "Order.Full" }},
             new("cargo.api"){ Scopes = { "Cargo.Full" }},
@@ -81,6 +81,7 @@ public static class Config
                 {
                     "Ocelot.Full",
                     "Catalog.Full",
+                    "Catalog.Read",
                     "Order.Full",
                     "Basket.Full",
                     "Discount.Full",
@@ -105,6 +106,7 @@ public static class Config
                 {
                     "Ocelot.Full",
                     "Catalog.Full",
+                    "Catalog.Read",
                     "Order.Full",
                     "Cargo.Full",
                     "Basket.Full",
