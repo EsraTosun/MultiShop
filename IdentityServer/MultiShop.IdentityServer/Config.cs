@@ -36,7 +36,6 @@ public static class Config
     public static IEnumerable<ApiResource> ApiResources =>
         new ApiResource[]
         {
-            new("ocelot.api") { Scopes = { "Ocelot.Full" } },
             new("catalog.api"){ Scopes = { "Catalog.Full", "Catalog.Read"}},
             new("discount.api"){ Scopes = { "Discount.Full" }},
             new("order.api"){ Scopes = { "Order.Full" }},
@@ -46,6 +45,7 @@ public static class Config
             new("payment.api"){ Scopes = { "Payment.Full" }},
             new("image.api"){ Scopes = { "Image.Full" }},
             new("message.api"){ Scopes = { "Message.Full" }},
+            new("ocelot.api") { Scopes = { "Ocelot.Full" } },
             new(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -86,6 +86,7 @@ public static class Config
                     "Basket.Full",
                     "Discount.Full",
                     "Payment.Full",
+                    "Image.Full",
                     "Message.Full",
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
@@ -112,6 +113,7 @@ public static class Config
                     "Basket.Full",
                     "Discount.Full",
                     "Payment.Full",
+                    "Image.Full",
                     "Message.Full",
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
