@@ -1,60 +1,50 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Duende.IdentityModel.Client;
+using Microsoft.Extensions.Options;
 using MultiShop.WebUI.Services.Interfaces;
 using MultiShop.WebUI.Settings;
-using System.Text.Json;
 
 namespace MultiShop.WebUI.Services.Concrete
 {
-    public sealed class ClientCredentialTokenService : IClientCredentialTokenService
+    public class ClientCredentialTokenService : IClientCredentialTokenService
     {
         private readonly HttpClient _httpClient;
-        private readonly ServiceApiSettings _apiSettings;
         private readonly ClientSettings _clientSettings;
-
-        private string? _cachedToken;
-        private DateTime _expiresAt;
+        private readonly ServiceApiSettings _serviceApiSettings;
 
         public ClientCredentialTokenService(
             HttpClient httpClient,
-            IOptions<ServiceApiSettings> apiSettings,
-            IOptions<ClientSettings> clientSettings)
+            IOptions<ClientSettings> clientSettings,
+            IOptions<ServiceApiSettings> serviceApiSettings)
         {
             _httpClient = httpClient;
-            _apiSettings = apiSettings.Value;
             _clientSettings = clientSettings.Value;
+            _serviceApiSettings = serviceApiSettings.Value;
         }
 
         public async Task<string> GetToken()
         {
-            if (_cachedToken != null && DateTime.UtcNow < _expiresAt)
-                return _cachedToken;
+            var discovery = await _httpClient.GetDiscoveryDocumentAsync(
+                new DiscoveryDocumentRequest
+                {
+                    Address = _serviceApiSettings.IdentityServerUrl,
+                    Policy = { RequireHttps = false }
+                });
 
-            var tokenEndpoint = $"{_apiSettings.IdentityServerUrl}/connect/token";
+            if (discovery.IsError)
+                throw new Exception(discovery.Error);
 
-            var form = new Dictionary<string, string>
-            {
-                ["grant_type"] = "client_credentials",
-                ["client_id"] = _clientSettings.MultiShopVisitorClient.ClientId,
-                ["client_secret"] = _clientSettings.MultiShopVisitorClient.ClientSecret,
-                ["scope"] = "Catalog.Read Image.Full Comment.Full Ocelot.Full"
-            };
+            var tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(
+                new ClientCredentialsTokenRequest
+                {
+                    Address = discovery.TokenEndpoint,
+                    ClientId = _clientSettings.MultiShopVisitorClient.ClientId,
+                    ClientSecret = _clientSettings.MultiShopVisitorClient.ClientSecret
+                });
 
-            var response = await _httpClient.PostAsync(
-                tokenEndpoint,
-                new FormUrlEncodedContent(form));
+            if (tokenResponse.IsError)
+                throw new Exception(tokenResponse.Error);
 
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("IdentityServer token üretmedi");
-
-            var json = await response.Content.ReadAsStringAsync();
-            using var doc = JsonDocument.Parse(json);
-
-            _cachedToken = doc.RootElement.GetProperty("access_token").GetString();
-            var expiresIn = doc.RootElement.GetProperty("expires_in").GetInt32();
-
-            _expiresAt = DateTime.UtcNow.AddSeconds(expiresIn - 60);
-
-            return _cachedToken!;
+            return tokenResponse.AccessToken!;
         }
     }
 }

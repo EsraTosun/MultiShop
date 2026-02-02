@@ -115,6 +115,7 @@ public static class Config
                     "Payment.Full",
                     "Image.Full",
                     "Message.Full",
+                    "Comment.Full",
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
