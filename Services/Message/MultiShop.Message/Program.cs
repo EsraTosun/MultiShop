@@ -8,12 +8,12 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // ?? JWT Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication("OcelotAuthenticationScheme")
+    .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
         options.Authority = builder.Configuration["IdentityServerUrl"];
         options.Audience = "message.api";
-        options.RequireHttpsMetadata = false; // prod ortamda true olmalý
+        options.RequireHttpsMetadata = false;
     });
 
 // ??? Database (PostgreSQL)
