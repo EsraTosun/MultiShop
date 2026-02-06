@@ -35,6 +35,10 @@ namespace MultiShop.Catalog.Controllers
         public async Task<IActionResult> GetProductDetailByProductId(string id)
         {
             var values = await _productDetailService.GetByProductIdProductDetailAsync(id);
+
+            if (values == null)
+                return NotFound(); 
+
             return Ok(values);
         }
 

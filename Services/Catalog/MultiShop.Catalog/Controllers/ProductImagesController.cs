@@ -27,14 +27,28 @@ namespace MultiShop.Catalog.Controllers
         [HttpGet("ProductImagesByProductId/{id}")]
         public async Task<IActionResult> ProductImagesByProductId(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest("ProductId boş olamaz");
+
             var values = await _productImageService.GetByProductIdProductImageAsync(id);
-            return Ok(values);
+
+            if (values == null)
+                return NotFound(); 
+
+            return Ok(values); 
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductImageById(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             var values = await _productImageService.GetByIdProductImageAsync(id);
+
+            if (values == null)
+                return NotFound();
+
             return Ok(values);
         }
 
