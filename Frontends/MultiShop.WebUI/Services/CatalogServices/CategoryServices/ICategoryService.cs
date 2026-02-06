@@ -5,6 +5,8 @@ namespace MultiShop.WebUI.Services.CatalogServices.CategoryServices
     public interface ICategoryService
     {
         Task<List<ResultCategoryDto>> GetAllCategoryAsync();
+        Task<List<ResultCategoryDto>> GetAllCategoryWithProductCountAsync(); // 👈 EKLE
+
         Task CreateCategoryAsync(CreateCategoryDto createCategoryDto);
         Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto);
         Task DeleteCategoryAsync(string id);

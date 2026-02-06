@@ -15,6 +15,8 @@ namespace MultiShop.Catalog.Mapping
             // GET
             CreateMap<Product, ResultProductDto>();
             CreateMap<Product, GetByIdProductDto>();
+
+            CreateMap<Product, ResultProductsWithCategoryDto>();
         }
     }
 }

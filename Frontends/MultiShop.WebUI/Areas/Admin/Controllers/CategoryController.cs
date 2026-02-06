@@ -23,7 +23,7 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             CategoryViewbagList();
-            var values = await _categoryService.GetAllCategoryAsync();
+            var values = await _categoryService.GetAllCategoryWithProductCountAsync();
             return View(values);
         }
 

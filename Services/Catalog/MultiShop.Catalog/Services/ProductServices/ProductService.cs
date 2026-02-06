@@ -41,7 +41,7 @@ namespace MultiShop.Catalog.Services.ProductServices
 
             foreach (var item in values)
             {
-                item.Category = await _categoryCollection.Find<Category>(x => x.CategoryId == item.CategoryId).FirstAsync();
+                item.Category = await _categoryCollection.Find<Category>(x => x.CategoryId == item.CategoryId).FirstOrDefaultAsync();
             }
 
             return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
@@ -53,7 +53,7 @@ namespace MultiShop.Catalog.Services.ProductServices
 
             foreach (var item in values)
             {
-                item.Category = await _categoryCollection.Find<Category>(x => x.CategoryId == item.CategoryId).FirstAsync();
+                item.Category = await _categoryCollection.Find<Category>(x => x.CategoryId == item.CategoryId).FirstOrDefaultAsync();
             }
 
             return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
