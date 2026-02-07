@@ -13,5 +13,6 @@ namespace MultiShop.WebUI.Services.CommentServices
         Task<int> GetTotalCommentCount();
         Task<int> GetActiveCommentCount();
         Task<int> GetPAssiveCommentCount();
+        Task<int> GetCommentCountByProductId(string productId);
     }
 }

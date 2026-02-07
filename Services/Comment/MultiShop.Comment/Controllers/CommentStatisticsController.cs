@@ -23,5 +23,15 @@ namespace MultiShop.Comment.Controllers
             int values = await _commentContext.UserComments.CountAsync();
             return Ok(values);
         }
+
+        [HttpGet("GetCommentCountByProductId/{productId}")]
+        public async Task<IActionResult> GetCommentCountByProductId(string productId)
+        {
+            int values = await _commentContext.UserComments
+                .Where(x => x.ProductId == productId)
+                .CountAsync();
+
+            return Ok(values);
+        }
     }
 }

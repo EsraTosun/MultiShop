@@ -63,5 +63,14 @@ namespace MultiShop.WebUI.Services.CommentServices
             var values = await responseMessage.Content.ReadFromJsonAsync<int>();
             return values;
         }
+
+        public async Task<int> GetCommentCountByProductId(string productId)
+        {
+            var responseMessage = await _httpClient
+                .GetAsync($"commentstatistics/GetCommentCountByProductId/{productId}");
+
+            var values = await responseMessage.Content.ReadFromJsonAsync<int>();
+            return values;
+        }
     }
 }
