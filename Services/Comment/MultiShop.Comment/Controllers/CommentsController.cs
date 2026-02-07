@@ -24,18 +24,22 @@ namespace MultiShop.Comment.Controllers
             return Ok(values);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateComment(UserComment userComment)
         {
             _context.UserComments.Add(userComment);
             _context.SaveChanges();
-            return Ok("Yorum başarıyla eklendi");
+            return Ok(new { success = true });
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteComment(int id)
         {
             var value = _context.UserComments.Find(id);
+            if (value == null)
+                return NotFound();
+
             _context.UserComments.Remove(value);
             _context.SaveChanges();
             return Ok("Yorum başarıyla silindi");
@@ -56,6 +60,7 @@ namespace MultiShop.Comment.Controllers
             return Ok("Yorum başarıyla güncellendi");
         }
 
+        [AllowAnonymous]
         [HttpGet("CommentListByProductId/{id}")]
         public IActionResult CommentListByProductId(string id)
         {

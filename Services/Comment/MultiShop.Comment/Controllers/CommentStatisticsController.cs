@@ -33,5 +33,20 @@ namespace MultiShop.Comment.Controllers
 
             return Ok(values);
         }
+
+        [HttpGet("GetAverageRatingByProductId/{productId}")]
+        public IActionResult GetAverageRatingByProductId(string productId)
+        {
+            var ratings = _commentContext.UserComments
+                .Where(x => x.ProductId == productId && x.Rating > 0)
+                .Select(x => x.Rating)
+                .ToList();
+
+            if (!ratings.Any())
+                return Ok(0);
+
+            var average = ratings.Average();
+            return Ok(Math.Round(average, 1));
+        }
     }
 }

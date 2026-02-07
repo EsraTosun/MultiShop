@@ -1,31 +1,89 @@
 ﻿<div class="col-md-6">
     <h4 class="mb-4">Bir Yorum Bırakın</h4>
     <small>Yorumunuzun alınması için geçerli bir email adresi giriniz.*</small>
-    <div class="d-flex my-3">
+    <div class="d-flex my-3 align-items-center">
         <p class="mb-0 mr-2">Ürün puanınız * :</p>
-        <div class="text-primary">
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
+        <div class="text-primary" id="starRating">
+            <i class="far fa-star" data-value="1"></i>
+            <i class="far fa-star" data-value="2"></i>
+            <i class="far fa-star" data-value="3"></i>
+            <i class="far fa-star" data-value="4"></i>
+            <i class="far fa-star" data-value="5"></i>
         </div>
     </div>
     <form method="post" asp-action="AddComment" asp-controller="ProductList">
+
+        <input type="hidden" name="ProductId" value="@ViewBag.x" />
+        <input type="hidden" name="Rating" id="ratingInput" value="0" />
+
         <div class="form-group">
-            <label for="name">Adınız soyadınız *</label>
-            <input type="text" class="form-control" id="name" name="NameSurname">
+            <label>Adınız soyadınız *</label>
+            <input type="text" class="form-control" name="NameSurname">
         </div>
+
         <div class="form-group">
-            <label for="email">Email adresiniz *</label>
-            <input type="email" class="form-control" id="email" name="Email">
+            <label>Email *</label>
+            <input type="email" class="form-control" name="Email">
         </div>
+
         <div class="form-group">
-            <label for="message">Yorumunuz *</label>
-            <textarea id="message" cols="30" rows="5" class="form-control" name="CommentDetail"></textarea>
+            <label>Yorumunuz *</label>
+            <textarea class="form-control" name="CommentDetail"></textarea>
         </div>
-        <div class="form-group mb-0">
-            <input type="submit" value="Yorum Yap" class="btn btn-primary px-3">
-        </div>
+
+        <input type="submit" value="Yorum Yap" class="btn btn-primary">
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const stars = document.querySelectorAll('#starRating i');
+        const ratingInput = document.getElementById('ratingInput');
+        const form = document.querySelector('form');
+
+        let selectedRating = 0;
+
+        // ⭐ STAR CLICK
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                selectedRating = index + 1;
+                ratingInput.value = selectedRating;
+                paintStars(selectedRating);
+            });
+
+            // ⭐ HOVER EFFECT
+            star.addEventListener('mouseover', () => {
+                paintStars(index + 1);
+            });
+
+            star.addEventListener('mouseout', () => {
+                paintStars(selectedRating);
+            });
+        });
+
+        // 🎨 STAR PAINTER
+        function paintStars(count) {
+            stars.forEach((star, i) => {
+                if (i < count) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        // 🚫 FORM VALIDATION
+        form.addEventListener('submit', function (e) {
+            if (ratingInput.value == "0") {
+                e.preventDefault();
+                alert("Lütfen yıldız puanı seçiniz ⭐");
+            }
+        });
+
+    });
+</script>
+
+

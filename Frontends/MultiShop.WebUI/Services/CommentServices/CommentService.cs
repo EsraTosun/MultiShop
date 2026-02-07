@@ -72,5 +72,22 @@ namespace MultiShop.WebUI.Services.CommentServices
             var values = await responseMessage.Content.ReadFromJsonAsync<int>();
             return values;
         }
+
+        public async Task<double> GetAverageRatingByProductId(string productId)
+        {
+            var response = await _httpClient.GetAsync(
+                $"CommentStatistics/GetAverageRatingByProductId/{productId}"
+            );
+
+            if (!response.IsSuccessStatusCode)
+                return 0;
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(content))
+                return 0;
+
+            return JsonConvert.DeserializeObject<double>(content);
+        }
     }
 }

@@ -26,6 +26,9 @@ namespace MultiShop.WebUI.ViewComponents.DefaultViewComponents
             {
                 item.CommentCount =
                     await _commentService.GetCommentCountByProductId(item.ProductId);
+
+                item.AverageRating =
+                    await _commentService.GetAverageRatingByProductId(item.ProductId);
             }
 
             return View(products);
