@@ -35,16 +35,28 @@ namespace MultiShop.WebUI.Controllers
         //[HttpPost]
         public async Task<IActionResult> AddBasketItem(string id)
         {
-            var values = await _productService.GetByIdProductAsync(id);
-            var items = new BasketItemDto
+            var product = await _productService.GetByIdProductAsync(id);
+
+            var item = new BasketItemDto
             {
-                ProductId = values.ProductId,
-                ProductName = values.ProductName,
-                Price = values.ProductPrice,
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                Price = product.ProductPrice,
                 Quantity = 1,
-                ProductImageUrl = values.ProductImageUrl
+                ProductImageUrl = product.ProductImageUrl
             };
-            await _basketService.AddBasketItem(items);
+
+            var success = await _basketService.AddBasketItem(item);
+
+            if (!success)
+            {
+                TempData["BasketError"] = "Ürün sepete eklenemedi. Lütfen tekrar deneyin.";
+            }
+            else
+            {
+                TempData["BasketSuccess"] = "Ürün sepete eklendi.";
+            }
+
             return RedirectToAction("Index");
         }
 

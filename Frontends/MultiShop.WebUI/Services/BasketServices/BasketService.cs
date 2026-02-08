@@ -9,22 +9,31 @@ namespace MultiShop.WebUI.Services.BasketServices
         {
             _httpClient = httpClient;
         }
-        public async Task AddBasketItem(BasketItemDto basketItemDto)
+        public async Task<bool> AddBasketItem(BasketItemDto basketItemDto)
         {
             var values = await GetBasket();
-            if (values != null)
+
+            if (values == null)
             {
-                if (!values.BasketItems.Any(x => x.ProductId == basketItemDto.ProductId))
+                values = new BasketTotalDto
                 {
-                    values.BasketItems.Add(basketItemDto);
-                }
-                else
-                {
-                    values = new BasketTotalDto();
-                    values.BasketItems.Add(basketItemDto);
-                }
+                    BasketItems = new List<BasketItemDto>()
+                };
             }
-            await SaveBasket(values);
+
+            var existingItem = values.BasketItems
+                .FirstOrDefault(x => x.ProductId == basketItemDto.ProductId);
+
+            if (existingItem == null)
+            {
+                values.BasketItems.Add(basketItemDto);
+            }
+            else
+            {
+                existingItem.Quantity += 1;
+            }
+
+            return await SaveBasket(values);
         }
 
         public Task DeleteBasket(string userId)
@@ -34,9 +43,17 @@ namespace MultiShop.WebUI.Services.BasketServices
 
         public async Task<BasketTotalDto> GetBasket()
         {
-            var responseMessage = await _httpClient.GetAsync("baskets");
-            var values = await responseMessage.Content.ReadFromJsonAsync<BasketTotalDto>();
-            return values;
+            var response = await _httpClient.GetAsync("baskets");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new BasketTotalDto
+                {
+                    BasketItems = new List<BasketItemDto>()
+                };
+            }
+
+            return await response.Content.ReadFromJsonAsync<BasketTotalDto>();
         }
 
         public async Task<bool> RemoveBasketItem(string productId)
@@ -48,9 +65,11 @@ namespace MultiShop.WebUI.Services.BasketServices
             return true;
         }
 
-        public async Task SaveBasket(BasketTotalDto basketTotalDto)
+        public async Task<bool> SaveBasket(BasketTotalDto basketTotalDto)
         {
-            await _httpClient.PostAsJsonAsync<BasketTotalDto>("baskets", basketTotalDto);
+            var response = await _httpClient.PostAsJsonAsync("baskets", basketTotalDto);
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

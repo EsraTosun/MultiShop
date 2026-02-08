@@ -7,6 +7,19 @@
 
 <div class="container-fluid">
     <div class="row px-xl-5">
+        @if (TempData["BasketError"] != null)
+        {
+            <div class="alert alert-warning py-2 px-3 mb-3 text-center w-100">
+                @TempData["BasketError"]
+            </div>
+        }
+
+        @if (TempData["BasketSuccess"] != null)
+        {
+            <div class="alert alert-success py-2 px-3 mb-3 text-center w-100">
+                @TempData["BasketSuccess"]
+            </div>
+        }
 
         @await Component.InvokeAsync("_ShoppingCartProductListComponentPartial")
 
