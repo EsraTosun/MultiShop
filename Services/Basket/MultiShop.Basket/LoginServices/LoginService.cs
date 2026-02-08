@@ -4,28 +4,25 @@ namespace MultiShop.Basket.LoginServices
 {
     public class LoginService : ILoginService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _context;
 
-        public LoginService(IHttpContextAccessor contextAccessor)
+        public LoginService(IHttpContextAccessor context)
         {
-            _httpContextAccessor = contextAccessor;
+            _context = context;
         }
 
         public string GetUserId
         {
             get
             {
-                var userId = _httpContextAccessor.HttpContext?
-                    .User?
-                    .FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? _httpContextAccessor.HttpContext?
-                    .User?
-                    .FindFirst("sub")?.Value;
+                var user = _context.HttpContext?.User;
 
-                if (string.IsNullOrEmpty(userId))
-                    throw new UnauthorizedAccessException("User is not authenticated.");
+                if (user == null || !user.Identity!.IsAuthenticated)
+                    return string.Empty;
 
-                return userId;
+                return user.Claims
+                    .FirstOrDefault(c => c.Type == "sub")?.Value
+                    ?? string.Empty;
             }
         }
     }

@@ -6,9 +6,9 @@ using MultiShop.Basket.Services;
 
 namespace MultiShop.Basket.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/baskets")]
+    [Authorize]
     public class BasketsController : ControllerBase
     {
         private readonly IBasketService _basketService;
@@ -23,34 +23,39 @@ namespace MultiShop.Basket.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMyBasketDetail()
+        public async Task<IActionResult> Get()
         {
-            var basket = await _basketService.GetBasket(_loginService.GetUserId);
+            var userId = _loginService.GetUserId;
 
-            if (basket == null)
-                return NoContent();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
-            return Ok(basket);
+            var basket = await _basketService.GetBasket(userId);
+            return basket == null ? NoContent() : Ok(basket);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveMyBasket(BasketTotalDto basketTotalDto)
+        public async Task<IActionResult> Save(BasketTotalDto dto)
         {
-            basketTotalDto.UserId = _loginService.GetUserId;
-            await _basketService.SaveBasket(basketTotalDto);
-            return Ok("Sepetteki değişiklikler kaydedili");
+            var userId = _loginService.GetUserId;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            dto.UserId = userId;
+            await _basketService.SaveBasket(dto);
+
+            return Ok();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteBasket()
+        public async Task<IActionResult> Delete()
         {
-            var deleted = await _basketService.DeleteBasket(_loginService.GetUserId);
+            var userId = _loginService.GetUserId;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
-            if (!deleted)
-                return NoContent();
-
-            return Ok("Sepet başarıyla silindi");
+            var deleted = await _basketService.DeleteBasket(userId);
+            return deleted ? Ok() : NoContent();
         }
-
     }
 }

@@ -1,93 +1,86 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using MultiShop.Basket.LoginServices;
 using MultiShop.Basket.Services;
 using MultiShop.Basket.Settings;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var requireAuthorizePolicy = new AuthorizationPolicyBuilder()
-    .RequireAuthenticatedUser()
-    .Build();
+// 🧠 Claim mapping kapatılır
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+// 🔐 Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = builder.Configuration["IdentityServerUrl"];
+        opt.RequireHttpsMetadata = false;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-{ 
-    opt.Authority = builder.Configuration["IdentityServerUrl"];
-    opt.Audience = "basket.api";
-    opt.RequireHttpsMetadata = false;
+        opt.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidAudiences = new[] { "basket.api" },
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+
+        opt.MapInboundClaims = false;
+    });
+
+// 🔐 Authorization (fallback policy)
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
 });
 
 builder.Services.AddHttpContextAccessor();
+
+// 🧩 Application services
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
-builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("RedisSettings"));
+
+// ⚙ Redis configuration
+builder.Services.Configure<RedisSettings>(
+    builder.Configuration.GetSection(nameof(RedisSettings))
+);
+
+// ⚠ Redis connection – fail safe
 builder.Services.AddSingleton<RedisService>(sp =>
 {
-    var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
-    var redis = new RedisService(redisSettings.Host, redisSettings.Port);
+    var settings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+    var redis = new RedisService(settings.Host, settings.Port);
+
     try
     {
         redis.Connect();
+        Console.WriteLine("[Redis] Connected");
     }
     catch (Exception ex)
     {
-        throw new Exception("Redis connection failed", ex);
+        Console.WriteLine("[Redis] Connection failed: " + ex.Message);
     }
+
     return redis;
 });
 
-builder.Services.AddControllers(opt =>
-{
-    opt.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
-});
+// 🎮 Controllers
+builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// 📘 Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "JWT Authorization header"
-    });
-
-    c.AddSecurityRequirement(new()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
