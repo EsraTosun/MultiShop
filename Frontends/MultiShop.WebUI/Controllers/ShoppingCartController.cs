@@ -43,19 +43,14 @@ namespace MultiShop.WebUI.Controllers
                 ProductName = product.ProductName,
                 Price = product.ProductPrice,
                 Quantity = 1,
-                ProductImageUrl = product.ProductImageUrl
+                ProductImageUrl = product.ProductImageUrl,
             };
 
             var success = await _basketService.AddBasketItem(item);
 
-            if (!success)
-            {
-                TempData["BasketError"] = "Ürün sepete eklenemedi. Lütfen tekrar deneyin.";
-            }
-            else
-            {
-                TempData["BasketSuccess"] = "Ürün sepete eklendi.";
-            }
+            TempData["BasketSuccess"] = success
+                ? "Ürün sepete eklendi."
+                : "Ürün sepete eklenemedi.";
 
             return RedirectToAction("Index");
         }
