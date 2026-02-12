@@ -1,7 +1,10 @@
 ﻿@model UpdateProductDto
+
 <div class="col-lg-7 h-auto mb-30">
     <div class="h-100 bg-light p-30">
+
         <h3>@Model.ProductName</h3>
+
         <div class="d-flex mb-3">
             <div class="text-primary mr-2">
                 <small class="fas fa-star"></small>
@@ -12,111 +15,124 @@
             </div>
             <small class="pt-1">(0 değerlendirme)</small>
         </div>
+
         <h3 class="font-weight-semi-bold mb-4">₺ @Model.ProductPrice</h3>
+
         <p class="mb-4">
             @Model.ProductDescription
         </p>
 
-        <div class="d-flex mb-3">
-            <strong class="text-dark mr-3">Ebatlar:</strong>
-            <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-1" name="size">
-                    <label class="custom-control-label" for="size-1">37</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-2" name="size">
-                    <label class="custom-control-label" for="size-2">38</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-3" name="size">
-                    <label class="custom-control-label" for="size-3">39</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-4" name="size">
-                    <label class="custom-control-label" for="size-4">40</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-5" name="size">
-                    <label class="custom-control-label" for="size-5">41</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-6" name="size">
-                    <label class="custom-control-label" for="size-6">42</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="size-7" name="size">
-                    <label class="custom-control-label" for="size-7">43</label>
-                </div>
-            </form>
-        </div>
+        <!-- ✅ TEK FORM BAŞLANGIÇ -->
+        <form asp-controller="ShoppingCart"
+              asp-action="AddBasketItem"
+              method="post">
 
-        <div class="d-flex mb-4">
-            <strong class="text-dark mr-3">Renkler:</strong>
-            <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-1" name="color">
-                    <label class="custom-control-label" for="color-1">Siyah</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-2" name="color">
-                    <label class="custom-control-label" for="color-2">Beyaz</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-3" name="color">
-                    <label class="custom-control-label" for="color-3">Kırmızı</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-4" name="color">
-                    <label class="custom-control-label" for="color-4">Mavi</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-5" name="color">
-                    <label class="custom-control-label" for="color-5">Yeşil</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="color-6" name="color">
-                    <label class="custom-control-label" for="color-6">Pembe</label>
-                </div>
-            </form>
-        </div>
+            @Html.AntiForgeryToken()
 
-        <div class="d-flex align-items-center mb-4 pt-2">
-            <div class="input-group quantity mr-3" style="width: 130px;">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                    </button>
-                </div>
-                <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </div>
+            <input type="hidden" name="productId" value="@Model.ProductId" />
+
+            <!-- SIZE -->
+            <div class="d-flex mb-3">
+                <strong class="text-dark mr-3">Ebatlar:</strong>
+
+                @for (int i = 37; i <= 43; i++)
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio"
+                               class="custom-control-input"
+                               id="size-@i"
+                               name="size"
+                               value="@i">
+                        <label class="custom-control-label" for="size-@i">@i</label>
+                    </div>
+                }
             </div>
-            <button class="btn btn-primary px-3">
-                <i class="fa fa-shopping-cart mr-1"></i> Sepete Ekle
-            </button>
-        </div>
+
+            <!-- COLOR -->
+            <div class="d-flex mb-4">
+                <strong class="text-dark mr-3">Renkler:</strong>
+
+                @{
+                    var colors = new List<string>
+                                { "Siyah", "Beyaz", "Kırmızı", "Mavi", "Yeşil", "Pembe" };
+                }
+
+                @foreach (var color in colors)
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio"
+                               class="custom-control-input"
+                               id="color-@color"
+                               name="color"
+                               value="@color">
+                        <label class="custom-control-label" for="color-@color">@color</label>
+                    </div>
+                }
+            </div>
+
+            <!-- QUANTITY + BUTTON -->
+            <div class="d-flex align-items-center mb-4 pt-2">
+
+                <div class="input-group quantity mr-3" style="width:130px;">
+
+                    <div class="input-group-btn">
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="decreaseQty()">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+
+                    <input type="number"
+                           id="quantityInput"
+                           name="quantity"
+                           class="form-control bg-secondary border-0 text-center"
+                           value="1"
+                           min="1" />
+
+                    <div class="input-group-btn">
+                        <button type="button"
+                                class="btn btn-primary"
+                                onclick="increaseQty()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary px-3">
+                    <i class="fa fa-shopping-cart mr-1"></i>
+                    Sepete Ekle
+                </button>
+
+            </div>
+
+        </form>
+        <!-- ✅ TEK FORM BİTİŞ -->
 
         <div class="d-flex pt-2">
             <strong class="text-dark mr-2">Paylaş:</strong>
             <div class="d-inline-flex">
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-pinterest"></i>
-                </a>
+                <a class="text-dark px-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                <a class="text-dark px-2" href="#"><i class="fab fa-twitter"></i></a>
+                <a class="text-dark px-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a class="text-dark px-2" href="#"><i class="fab fa-pinterest"></i></a>
             </div>
         </div>
 
     </div>
 </div>
+
+<script>
+    function increaseQty() {
+        var input = document.getElementById("quantityInput");
+        input.value = parseInt(input.value) + 1;
+    }
+
+    function decreaseQty() {
+        var input = document.getElementById("quantityInput");
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+</script>

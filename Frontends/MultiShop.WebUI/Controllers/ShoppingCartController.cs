@@ -32,17 +32,23 @@ namespace MultiShop.WebUI.Controllers
             return View();
         }
 
-        //[HttpPost]
-        public async Task<IActionResult> AddBasketItem(string id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddBasketItem(string productId, int? quantity)
         {
-            var product = await _productService.GetByIdProductAsync(id);
+            int finalQuantity = quantity ?? 1;
+
+            var product = await _productService.GetByIdProductAsync(productId);
+
+            if (product == null)
+                return RedirectToAction("Index");
 
             var item = new BasketItemDto
             {
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Price = product.ProductPrice,
-                Quantity = 1,
+                Quantity = finalQuantity,
                 ProductImageUrl = product.ProductImageUrl,
             };
 

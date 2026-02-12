@@ -39,12 +39,9 @@ namespace MultiShop.WebUI.Services.CatalogServices.ProductImageServices
         public async Task<GetByIdProductImageDto?> GetByProductIdProductImageAsync(string id)
         {
             var response = await _httpClient
-                .GetAsync("productimages/ProductImagesByProductId/" + id);
+                .GetAsync($"ProductImages/ProductImagesByProductId/{id}");
 
             if (!response.IsSuccessStatusCode)
-                return null;
-
-            if (response.Content.Headers.ContentLength == 0)
                 return null;
 
             return await response.Content
