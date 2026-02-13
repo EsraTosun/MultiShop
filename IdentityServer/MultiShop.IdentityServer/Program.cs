@@ -15,6 +15,7 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("Starting up");
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 // -----------------------------
 // Serilog
@@ -84,6 +85,7 @@ builder.Services.AddAuthentication()
 builder.Services.AddControllers();
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // -----------------------------
 // Middleware

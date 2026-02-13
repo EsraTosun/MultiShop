@@ -6,13 +6,26 @@ using MultiShop.Cargo.DataAccessLayer.Concrete;
 using MultiShop.Cargo.DataAccessLayer.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-{
-    opt.Authority = builder.Configuration["IdentityServerUrl"];
-    opt.Audience = "cargo.api";
-    opt.RequireHttpsMetadata = false;
-});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Authority = "http://identity";
+        opt.RequireHttpsMetadata = false;
+
+        opt.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidAudiences = new[] { "cargo.api" }, 
+            ValidateLifetime = true,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+
+        opt.MapInboundClaims = false;
+    });
+
 
 builder.Services.AddDbContext<CargoContext>();
 builder.Services.AddScoped<ICargoCompanyDal, EfCargoCompanyDal>();
@@ -30,6 +43,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>a2b0969d-a1d0-45f6-b8b3-3d9db2783257</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ApiGateway\MultiShop.OcelotGateway\MultiShop.OcelotGateway.csproj" />
+    <ProjectReference Include="..\IdentityServer\MultiShop.IdentityServer\MultiShop.IdentityServer.csproj" />
+    <ProjectReference Include="..\Services\Basket\MultiShop.Basket\MultiShop.Basket.csproj" />
+    <ProjectReference Include="..\Services\Cargo\MultiShop.Cargo.WebApi\MultiShop.Cargo.WebApi.csproj" />
+    <ProjectReference Include="..\Services\Catalog\MultiShop.Catalog\MultiShop.Catalog.csproj" />
+    <ProjectReference Include="..\Services\Comment\MultiShop.Comment\MultiShop.Comment.csproj" />
+    <ProjectReference Include="..\Services\Discount\MultiShop.Discount\MultiShop.Discount.csproj" />
+    <ProjectReference Include="..\Services\Images\MulltiShop.Images\MulltiShop.Images.csproj" />
+    <ProjectReference Include="..\Services\Message\MultiShop.Message\MultiShop.Message.csproj" />
+    <ProjectReference Include="..\Services\Order\Presentation\MultiShop.Order.WebApi\MultiShop.Order.WebApi.csproj" />
+    <ProjectReference Include="..\Services\Payment\MultiShop.Payment\MultiShop.Payment.csproj" />
+  </ItemGroup>
+
+</Project>

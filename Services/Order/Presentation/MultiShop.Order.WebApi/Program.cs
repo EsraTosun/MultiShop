@@ -8,15 +8,28 @@ using MultiShop.Order.Persistence.Context;
 using MultiShop.Order.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 // ===== Authentication =====
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.Authority = builder.Configuration["IdentityServerUrl"];
-        opt.Audience = "order.api";
+        opt.Authority = "http://identity";
         opt.RequireHttpsMetadata = false;
+
+        opt.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidAudiences = new[] { "order.api" },
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+
+        opt.MapInboundClaims = false; 
     });
+
 
 // ===== DbContext =====
 builder.Services.AddDbContext<OrderContext>();
@@ -73,6 +86,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // ===== Middleware =====
 if (app.Environment.IsDevelopment())

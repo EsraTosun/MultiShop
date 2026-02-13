@@ -3,6 +3,7 @@ using Ocelot.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 // ----------------------
 // Configuration
@@ -18,7 +19,7 @@ builder.Configuration
 builder.Services.AddAuthentication()
     .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
-        options.Authority = builder.Configuration["IdentityServerUrl"];
+        options.Authority = "http://identity";
         options.Audience = "ocelot.api";
         options.RequireHttpsMetadata = false;
 
@@ -26,6 +27,7 @@ builder.Services.AddAuthentication()
         {
             ValidateAudience = true,
             ValidateIssuer = true,
+            ValidateLifetime = true,
             NameClaimType = "name",
             RoleClaimType = "role"
         };
@@ -39,6 +41,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // ----------------------
 // Middleware

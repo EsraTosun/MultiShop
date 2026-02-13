@@ -22,13 +22,23 @@ namespace MultiShop.WebUI.ViewComponents.DefaultViewComponents
         {
             var products = await _productService.GetAllProductAsync();
 
+            products ??= new List<ResultProductDto>();
+
             foreach (var item in products)
             {
-                item.CommentCount =
-                    await _commentService.GetCommentCountByProductId(item.ProductId);
+                if (_commentService != null)
+                {
+                    item.CommentCount =
+                        await _commentService.GetCommentCountByProductId(item.ProductId);
 
-                item.AverageRating =
-                    await _commentService.GetAverageRatingByProductId(item.ProductId);
+                    item.AverageRating =
+                        await _commentService.GetAverageRatingByProductId(item.ProductId);
+                }
+                else
+                {
+                    item.CommentCount = 0;
+                    item.AverageRating = 0;
+                }
             }
 
             return View(products);

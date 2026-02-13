@@ -6,15 +6,28 @@ using MultiShop.Message.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 // ?? JWT Authentication
 builder.Services.AddAuthentication("OcelotAuthenticationScheme")
     .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
-        options.Authority = builder.Configuration["IdentityServerUrl"];
-        options.Audience = "message.api";
+        options.Authority = "http://identity";
         options.RequireHttpsMetadata = false;
+
+        options.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidAudiences = new[] { "message.api" },
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+
+        options.MapInboundClaims = false; 
     });
+
 
 // ??? Database (PostgreSQL)
 builder.Services.AddDbContext<MessageContext>(options =>
@@ -37,6 +50,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // ?? Middleware
 if (app.Environment.IsDevelopment())

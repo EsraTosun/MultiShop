@@ -63,6 +63,7 @@ public static class Config
                 {
                     "Ocelot.Full",
                     "Catalog.Read",
+                    "Catalog.Full",
                     "Image.Full",
                     "Comment.Full",
                 }

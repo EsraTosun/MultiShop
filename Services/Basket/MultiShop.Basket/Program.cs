@@ -4,9 +4,11 @@ using Microsoft.Extensions.Options;
 using MultiShop.Basket.LoginServices;
 using MultiShop.Basket.Services;
 using MultiShop.Basket.Settings;
+using Microsoft.Extensions.Hosting;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 // 🧠 Claim mapping kapatılır
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -15,13 +17,14 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.Authority = builder.Configuration["IdentityServerUrl"];
+        opt.Authority = "http://identity";
         opt.RequireHttpsMetadata = false;
 
         opt.TokenValidationParameters = new()
         {
             ValidateAudience = true,
             ValidAudiences = new[] { "basket.api" },
+            ValidateLifetime = true,
             NameClaimType = "name",
             RoleClaimType = "role"
         };
@@ -75,6 +78,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

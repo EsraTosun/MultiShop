@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MultiShop.ServiceDefaults\MultiShop.ServiceDefaults.csproj" />
     <ProjectReference Include="..\MultiShop.Cargo.BusinessLayer\MultiShop.Cargo.BusinessLayer.csproj" />
     <ProjectReference Include="..\MultiShop.Cargo.DataAccessLayer\MultiShop.Cargo.DataAccessLayer.csproj" />
     <ProjectReference Include="..\MultiShop.Cargo.DtoLayer\MultiShop.Cargo.DtoLayer.csproj" />

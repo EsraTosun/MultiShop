@@ -14,6 +14,8 @@ namespace MultiShop.WebUI.ViewComponents.DefaultViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var values = await _featureService.GetAllFeatureAsync();
+            values ??= new List<ResultFeatureDto>();
+
             return View(values);
         }
     }

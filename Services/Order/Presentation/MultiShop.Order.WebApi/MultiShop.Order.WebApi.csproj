@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\MultiShop.ServiceDefaults\MultiShop.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\Core\MultiShop.Order.Application\MultiShop.Order.Application.csproj" />
     <ProjectReference Include="..\..\Infrastucture\MultiShop.Order.Persistence\MultiShop.Order.Persistence.csproj" />
   </ItemGroup>
