@@ -12,7 +12,7 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication("OcelotAuthenticationScheme")
     .AddJwtBearer("OcelotAuthenticationScheme", options =>
     {
-        options.Authority = "http://identity";
+        options.Authority = builder.Configuration["IdentityServerUrl"];
         options.RequireHttpsMetadata = false;
 
         options.TokenValidationParameters = new()

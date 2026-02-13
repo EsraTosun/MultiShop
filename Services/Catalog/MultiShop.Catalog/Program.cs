@@ -24,7 +24,7 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
-        opt.Authority = "http://identity";
+        opt.Authority = builder.Configuration["IdentityServerUrl"];
         opt.RequireHttpsMetadata = false;
 
         opt.TokenValidationParameters = new()
