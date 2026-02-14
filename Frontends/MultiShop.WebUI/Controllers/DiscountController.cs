@@ -41,7 +41,7 @@ namespace MultiShop.WebUI.Controllers
             var discountedTotal = totalWithTax - (totalWithTax * discountRate / 100);
 
             TempData["CouponSuccess"] = $"Kupon uygulandı! %{discountRate} indirim kazandınız 🎉";
-            TempData["DiscountedTotal"] = discountedTotal;
+            TempData["DiscountedTotal"] = discountedTotal.ToString("0.00");
             TempData["DiscountRate"] = discountRate;
             TempData["CouponCode"] = CouponCode;
 
