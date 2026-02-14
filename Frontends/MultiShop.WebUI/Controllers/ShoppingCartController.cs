@@ -15,21 +15,30 @@ namespace MultiShop.WebUI.Controllers
             _productService = productService;
             _basketService = basketService;
         }
-        public async Task<IActionResult> Index(string code,int discountRate,decimal totalNewPriceWithDiscount)
+        public async Task<IActionResult> Index(string code, int discountRate, decimal totalNewPriceWithDiscount)
         {
             ViewBag.code = code;
             ViewBag.discountRate = discountRate;
             ViewBag.totalNewPriceWithDiscount = totalNewPriceWithDiscount;
+
             ViewBag.directory1 = "Ana Sayfa";
             ViewBag.directory2 = "Ürünler";
             ViewBag.directory3 = "Sepetim";
-            var values = await _basketService.GetBasket();
-            ViewBag.total = values.TotalPrice;
-            var totalPriceWithTax = values.TotalPrice + values.TotalPrice / 100 * 10;
-            var tax = values.TotalPrice / 100 * 10;
-            ViewBag.totalPriceWithTax = totalPriceWithTax;
+
+            var basket = await _basketService.GetBasket();
+
+            if (basket == null)
+                return View(new List<BasketItemDto>());
+
+            ViewBag.total = basket.TotalPrice;
+
+            var tax = basket.TotalPrice * 0.10M;
+            var totalPriceWithTax = basket.TotalPrice + tax;
+
             ViewBag.tax = tax;
-            return View();
+            ViewBag.totalPriceWithTax = totalPriceWithTax;
+
+            return View(basket.BasketItems);
         }
 
         [HttpPost]
@@ -59,6 +68,13 @@ namespace MultiShop.WebUI.Controllers
                 : "Ürün sepete eklenemedi.";
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuantity([FromBody] BasketUpdateDto model)
+        {
+            await _basketService.UpdateBasketItemQuantity(model.ProductId, model.Quantity);
+            return Ok();
         }
 
         public async Task<IActionResult> RemoveBasketItem(string id)

@@ -8,6 +8,7 @@ namespace MultiShop.WebUI.Services.BasketServices
         Task<bool> SaveBasket(BasketTotalDto basketTotalDto);
         Task DeleteBasket(string userId);
         Task<bool> AddBasketItem(BasketItemDto basketItemDto);
+        Task<bool> UpdateBasketItemQuantity(string productId, int quantity);
         Task<bool> RemoveBasketItem(string productId);
     }
 }

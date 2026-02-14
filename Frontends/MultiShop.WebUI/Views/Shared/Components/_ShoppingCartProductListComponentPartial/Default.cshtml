@@ -1,43 +1,175 @@
-﻿@model List<BasketItemDto>
-<div class="col-lg-8 table-responsive mb-5">
-    <table class="table table-light table-borderless table-hover text-center mb-0">
-        <thead class="thead-dark">
-            <tr>
-                <th>Ürün</th>
-                <th>Fiyat</th>
-                <th>Miktar</th>
-                <th>Toplam</th>
-                <th>Kaldır</th>
-            </tr>
-        </thead>
-        <tbody class="align-middle">
-      
-            @foreach(var item in Model)
-            {
-                <tr>
-                    <td class="align-middle"><img src="@item.ProductImageUrl" alt="" style="width: 50px; height:60px;"> @item.ProductName</td>
-                    <td class="align-middle">@item.Price ₺</td>
-                    <td class="align-middle">
-                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="@item.Quantity">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="align-middle">@item.Price ₺</td>
-                    <td class="align-middle"><a href="/ShoppingCart/RemoveBasketItem/@item.ProductId" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a></td>
-                </tr>
-            }
-            
+﻿@model List<MultiShop.DtoLayer.BasketDtos.BasketItemDto>
 
-        </tbody>
-    </table>
+@{
+    ViewData["Title"] = "Sepetim";
+    decimal total = Model?.Sum(x => x.Price * x.Quantity) ?? 0;
+    decimal tax = total * 0.10M;
+    decimal totalWithTax = total + tax;
+}
+
+@Html.AntiForgeryToken()
+
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+
+        <!-- 🛒 SEPET TABLO -->
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-light table-borderless table-hover text-center mb-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Ürün</th>
+                        <th>Fiyat</th>
+                        <th>Miktar</th>
+                        <th>Toplam</th>
+                        <th>Kaldır</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    <img src="@item.ProductImageUrl"
+                                         style="width: 50px; height:60px;">
+                                    @item.ProductName
+                                </td>
+
+                                <td class="align-middle">
+                                    @item.Price ₺
+                                </td>
+
+                                <td class="align-middle">
+                                    <div class="input-group quantity mx-auto" style="width: 110px;">
+
+                                        <div class="input-group-btn">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary btn-minus">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+
+                                        <input type="text"
+                                               class="form-control form-control-sm bg-secondary border-0 text-center quantity-input"
+                                               value="@item.Quantity"
+                                               data-product-id="@item.ProductId">
+
+                                        <div class="input-group-btn">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary btn-plus">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td class="align-middle">
+                                    @(item.Price* item.Quantity) ₺
+                                </td>
+
+                                <td class="align-middle">
+                                    <a href="/ShoppingCart/RemoveBasketItem/@item.ProductId"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">Sepetiniz boş.</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 💳 TOPLAM ALANI -->
+        <div class="col-lg-4">
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Sepet Özeti</h4>
+                </div>
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Ara Toplam</h6>
+                        <h6 class="font-weight-medium">@total ₺</h6>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">KDV (%10)</h6>
+                        <h6 class="font-weight-medium">@tax ₺</h6>
+                    </div>
+
+                </div>
+
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Toplam</h5>
+                        <h5 class="font-weight-bold">@totalWithTax ₺</h5>
+                    </div>
+
+                    <a href="#" class="btn btn-block btn-primary my-3 py-3">
+                        Ödemeye Geç
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const table = document.querySelector(".table"); // tablonun parent element’i
+        console.log("Table element:", table);
+
+        table.addEventListener("click", function(e) {
+            const target = e.target.closest(".btn-plus, .btn-minus");
+            if (!target) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const input = target.closest(".quantity").querySelector(".quantity-input");
+            const productId = input.dataset.productId;
+            let quantity = parseInt(input.value, 10) || 0;
+
+            updateQuantity(productId, quantity, input);
+        });
+
+        function updateQuantity(productId, quantity, input) {
+            console.log("Sending to backend:", productId, quantity);
+
+            fetch('/ShoppingCart/UpdateQuantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken':
+                        document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ productId, quantity })
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Backend update successful");
+                    input.value = quantity; // input’u anında güncelle
+                } else {
+                    console.log("Backend update failed");
+                }
+            }).catch(err => {
+                console.error("Fetch error:", err);
+            });
+        }
+
+    });
+</script>
+

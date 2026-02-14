@@ -62,6 +62,30 @@ namespace MultiShop.WebUI.Services.BasketServices
             return await response.Content.ReadFromJsonAsync<BasketTotalDto>();
         }
 
+        public async Task<bool> UpdateBasketItemQuantity(string productId, int quantity)
+        {
+            var basket = await GetBasket();
+            if (basket == null)
+                return false;
+
+            var item = basket.BasketItems
+                .FirstOrDefault(x => x.ProductId == productId);
+
+            if (item == null)
+                return false;
+
+            if (quantity <= 0)
+            {
+                basket.BasketItems.Remove(item);
+            }
+            else
+            {
+                item.Quantity = quantity;
+            }
+
+            return await SaveBasket(basket);
+        }
+
         public async Task<bool> RemoveBasketItem(string productId)
         {
             var basket = await GetBasket();
