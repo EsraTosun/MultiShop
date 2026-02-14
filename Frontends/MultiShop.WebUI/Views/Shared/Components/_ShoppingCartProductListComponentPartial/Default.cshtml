@@ -9,121 +9,81 @@
 
 @Html.AntiForgeryToken()
 
-<div class="container-fluid pt-5">
-    <div class="row px-xl-5">
+<div>
+    <table class="table table-light table-borderless table-hover text-center mb-0">
+        <thead class="thead-dark">
+            <tr>
+                <th>Ürün</th>
+                <th>Fiyat</th>
+                <th>Miktar</th>
+                <th>Toplam</th>
+                <th>Kaldır</th>
+            </tr>
+        </thead>
+        <tbody class="align-middle">
 
-        <!-- 🛒 SEPET TABLO -->
-        <div class="col-lg-8 table-responsive mb-5">
-            <table class="table table-light table-borderless table-hover text-center mb-0">
-                <thead class="thead-dark">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
                     <tr>
-                        <th>Ürün</th>
-                        <th>Fiyat</th>
-                        <th>Miktar</th>
-                        <th>Toplam</th>
-                        <th>Kaldır</th>
+                        <td class="align-middle">
+                            <img src="@item.ProductImageUrl"
+                                 style="width: 50px; height:60px;">
+                            @item.ProductName
+                        </td>
+
+                        <td class="align-middle">
+                            @item.Price ₺
+                        </td>
+
+                        <td class="align-middle">
+                            <div class="input-group quantity mx-auto" style="width: 110px;">
+
+                                <div class="input-group-btn">
+                                    <button type="button"
+                                            class="btn btn-sm btn-primary btn-minus">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+
+                                <input type="text"
+                                       class="form-control form-control-sm bg-secondary border-0 text-center quantity-input"
+                                       value="@item.Quantity"
+                                       data-product-id="@item.ProductId">
+
+                                <div class="input-group-btn">
+                                    <button type="button"
+                                            class="btn btn-sm btn-primary btn-plus">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
+                            @(item.Price* item.Quantity) ₺
+                        </td>
+
+                        <td class="align-middle">
+                            <a href="/ShoppingCart/RemoveBasketItem/@item.ProductId"
+                               class="btn btn-sm btn-danger">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="align-middle">
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">Sepetiniz boş.</td>
+                </tr>
+            }
 
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="align-middle">
-                                    <img src="@item.ProductImageUrl"
-                                         style="width: 50px; height:60px;">
-                                    @item.ProductName
-                                </td>
-
-                                <td class="align-middle">
-                                    @item.Price ₺
-                                </td>
-
-                                <td class="align-middle">
-                                    <div class="input-group quantity mx-auto" style="width: 110px;">
-
-                                        <div class="input-group-btn">
-                                            <button type="button"
-                                                    class="btn btn-sm btn-primary btn-minus">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-
-                                        <input type="text"
-                                               class="form-control form-control-sm bg-secondary border-0 text-center quantity-input"
-                                               value="@item.Quantity"
-                                               data-product-id="@item.ProductId">
-
-                                        <div class="input-group-btn">
-                                            <button type="button"
-                                                    class="btn btn-sm btn-primary btn-plus">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td class="align-middle">
-                                    @(item.Price* item.Quantity) ₺
-                                </td>
-
-                                <td class="align-middle">
-                                    <a href="/ShoppingCart/RemoveBasketItem/@item.ProductId"
-                                       class="btn btn-sm btn-danger">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5">Sepetiniz boş.</td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 💳 TOPLAM ALANI -->
-        <div class="col-lg-4">
-            <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
-                    <h4 class="font-weight-semi-bold m-0">Sepet Özeti</h4>
-                </div>
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between mb-3 pt-1">
-                        <h6 class="font-weight-medium">Ara Toplam</h6>
-                        <h6 class="font-weight-medium">@total ₺</h6>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">KDV (%10)</h6>
-                        <h6 class="font-weight-medium">@tax ₺</h6>
-                    </div>
-
-                </div>
-
-                <div class="card-footer border-secondary bg-transparent">
-                    <div class="d-flex justify-content-between mt-2">
-                        <h5 class="font-weight-bold">Toplam</h5>
-                        <h5 class="font-weight-bold">@totalWithTax ₺</h5>
-                    </div>
-
-                    <a href="#" class="btn btn-block btn-primary my-3 py-3">
-                        Ödemeye Geç
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    </div>
+        </tbody>
+    </table>
 </div>
 
 

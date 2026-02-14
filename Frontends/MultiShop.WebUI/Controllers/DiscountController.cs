@@ -21,17 +21,31 @@ namespace MultiShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmDiscountCoupon(string code)
+        public async Task<IActionResult> ConfirmDiscountCoupon(string? CouponCode)
         {
-            var values = await _discountService.GetDiscountCouponCountRate(code);
+            if (string.IsNullOrWhiteSpace(CouponCode))
+            {
+                return RedirectToAction("Index", "ShoppingCart");
+            }
 
-            var basketValues = await _basketService.GetBasket();
-            var totalPriceWithTax = basketValues.TotalPrice + basketValues.TotalPrice / 100 * 10;
+            var discountRate = await _discountService.GetDiscountCouponCountRate(CouponCode);
 
-            var totalNewPriceWithDiscount = totalPriceWithTax - (totalPriceWithTax / 100 * values);
-            // ViewBag.totalNewPriceWithDiscount = totalNewPriceWithDiscount;
+            if (discountRate <= 0)
+            {
+                TempData["CouponError"] = "Kupon bulunamadı veya geçersiz.";
+                return RedirectToAction("Index", "ShoppingCart");
+            }
 
-            return RedirectToAction("Index", "ShoppingCart", new { code = code, discountRate = values, totalNewPriceWithDiscount = totalNewPriceWithDiscount });
+            var basket = await _basketService.GetBasket();
+            var totalWithTax = basket.TotalPrice * 1.10m;
+            var discountedTotal = totalWithTax - (totalWithTax * discountRate / 100);
+
+            TempData["CouponSuccess"] = $"Kupon uygulandı! %{discountRate} indirim kazandınız 🎉";
+            TempData["DiscountedTotal"] = discountedTotal;
+            TempData["DiscountRate"] = discountRate;
+            TempData["CouponCode"] = CouponCode;
+
+            return RedirectToAction("Index", "ShoppingCart");
         }
     }
 }

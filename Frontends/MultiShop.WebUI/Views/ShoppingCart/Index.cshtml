@@ -21,12 +21,14 @@
             </div>
         }
 
-        @await Component.InvokeAsync("_ShoppingCartProductListComponentPartial")
+        <div class="col-lg-8">
+            @await Component.InvokeAsync("_ShoppingCartProductListComponentPartial")
+        </div>
+        @* @await Component.InvokeAsync("_ShoppingCartDiscountCouponComponentPartial") *@
 
-     @*    @await Component.InvokeAsync("_ShoppingCartDiscountCouponComponentPartial") *@
-
-        @await Html.PartialAsync("~/Views/Discount/ConfirmDiscountCoupon.cshtml");
-        
+        <div class="col-lg-4">
+            @await Html.PartialAsync("~/Views/Discount/ConfirmDiscountCoupon.cshtml")
+        </div>
     </div>
 </div>
 <!-- Cart End -->

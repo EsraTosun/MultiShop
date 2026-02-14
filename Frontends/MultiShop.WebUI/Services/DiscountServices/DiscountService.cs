@@ -11,16 +11,29 @@ namespace MultiShop.WebUI.Services.DiscountServices
         }
         public async Task<GetDiscountCodeDetailByCode> GetDiscountCode(string code)
         {
-            var responseMessage = await _httpClient.GetAsync("http://localhost:7071/api/Discounts/GetCodeDetailByCodeAsync?code=" + code);
-            var values = await responseMessage.Content.ReadFromJsonAsync<GetDiscountCodeDetailByCode>();
-            return values;
+            var responseMessage = await _httpClient.GetAsync(
+                "discounts/GetCodeDetailByCodeAsync?code=" + code
+            );
+
+            if (!responseMessage.IsSuccessStatusCode)
+                return null;
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<GetDiscountCodeDetailByCode>();
         }
+
 
         public async Task<int> GetDiscountCouponCountRate(string code)
         {
-            var responseMessage = await _httpClient.GetAsync("http://localhost:7071/api/Discounts/GetDiscountCouponCountRate?code=" + code);
-            var values = await responseMessage.Content.ReadFromJsonAsync<int>();
-            return values;
+            var responseMessage = await _httpClient.GetAsync(
+                "discounts/GetDiscountCouponRateByCodeAsync?code=" + code
+            );
+
+            if (!responseMessage.IsSuccessStatusCode)
+                return 0;
+
+            var rate = await responseMessage.Content.ReadFromJsonAsync<int>();
+            return rate;
         }
     }
 }
