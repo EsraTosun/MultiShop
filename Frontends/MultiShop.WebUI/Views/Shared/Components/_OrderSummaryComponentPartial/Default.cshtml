@@ -1,30 +1,44 @@
 ﻿@model List<BasketItemDto>
 
 <div class="bg-light p-30 mb-5">
-    <div class="border-bottom">
-        <h6 class="mb-3">Sipariş Ürün Listesi</h6>
-        @foreach(var item in Model)
-        {
-            <div class="d-flex justify-content-between">
-                <p>@item.ProductName (@item.Quantity)</p>
-                <h6>@item.Price ₺</h6>
+
+    <h6 class="mb-3">Sipariş Ürün Listesi</h6>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center mb-0">
+            Sepetinizde ürün bulunmamaktadır.
+        </div>
+    }
+    else
+    {
+        <div class="border-bottom pb-2">
+            @foreach (var item in Model)
+            {
+                <div class="d-flex justify-content-between">
+                    <p>@item.ProductName (@item.Quantity)</p>
+                    <h6>@(item.Price* item.Quantity) ₺</h6>
+                </div>
+            }
+        </div>
+
+        <div class="border-bottom pt-3 pb-2">
+            <div class="d-flex justify-content-between mb-3">
+                <h6>Alışveriş Tutarı (KDV dahil)</h6>
+                <h6>@Model.Sum(x => x.Price * x.Quantity) ₺</h6>
             </div>
-        }        
-    </div>
-    <div class="border-bottom pt-3 pb-2">
-        <div class="d-flex justify-content-between mb-3">
-            <h6>Alışveriş Tutarı (Kdv dahil)</h6>
-            <h6>62.70 ₺</h6>
+
+            <div class="d-flex justify-content-between">
+                <h6 class="font-weight-medium">Kargo Ücreti</h6>
+                <h6 class="font-weight-medium">12 ₺</h6>
+            </div>
         </div>
-        <div class="d-flex justify-content-between">
-            <h6 class="font-weight-medium">Kargo Ücreti</h6>
-            <h6 class="font-weight-medium">12 ₺</h6>
+
+        <div class="pt-2">
+            <div class="d-flex justify-content-between mt-2">
+                <h5>Genel Toplam</h5>
+                <h5>@(Model.Sum(x => x.Price * x.Quantity) + 12) ₺</h5>
+            </div>
         </div>
-    </div>
-    <div class="pt-2">
-        <div class="d-flex justify-content-between mt-2">
-            <h5>Genel Toplam</h5>
-            <h5>74.70 ₺</h5>
-        </div>
-    </div>
+    }
 </div>
