@@ -13,11 +13,22 @@ namespace MultiShop.WebUI.Services.OrderServices.OrderOderingServices
         }
         public async Task<List<ResultOrderingByUserIdDto>> GetOrderingByUserId(string id)
         {
-            //$"products/ProductListWithCategoryByCategoryId/{CategoryId}"
             var responseMessage = await _httpClient.GetAsync($"orderings/GetOrderingByUserId/{id}");
+
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                return new List<ResultOrderingByUserIdDto>();
+            }
+
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            var values = JsonConvert.DeserializeObject<List<ResultOrderingByUserIdDto>>(jsonData);
-            return values;
+
+            if (string.IsNullOrWhiteSpace(jsonData))
+            {
+                return new List<ResultOrderingByUserIdDto>();
+            }
+
+            return JsonConvert.DeserializeObject<List<ResultOrderingByUserIdDto>>(jsonData)
+                   ?? new List<ResultOrderingByUserIdDto>();
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Google.Protobuf.WellKnownTypes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MultiShop.Order.Application.Features.Mediator.Commands.OrderingCommands;
 using MultiShop.Order.Application.Features.Mediator.Queries.OrderingQueries;
+using MultiShop.Order.Application.Features.Mediator.Results.OrderingResults;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,7 +33,10 @@ namespace MultiShop.Order.WebApi.Controllers
         public async Task<IActionResult> GetOrderingById(int id)
         {
             var value = await _mediator.Send(new GetOrderingByIdQuery(id));
-            if (value == null) return NotFound($"Sipariş bulunamadı: {id}");
+
+            if (value == null)
+                return NotFound();
+
             return Ok(value);
         }
 
