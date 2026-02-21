@@ -12,15 +12,12 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="../../pages/charts/chartjs.html">
+            <a class="nav-link"
+               asp-area="User"
+               asp-controller="MyOrder"
+               asp-action="MyOrderList">
                 <i class="mdi mdi-chart-pie menu-icon"></i>
-                <span class="menu-title">Aktif Siparişlerim</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="../../pages/charts/chartjs.html">
-                <i class="mdi mdi-chart-pie menu-icon"></i>
-                <span class="menu-title">Geçmiş Siparişlerim</span>
+                <span class="menu-title">Siparişlerim</span>
             </a>
         </li>
         <li class="nav-item">
@@ -36,7 +33,10 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="../../pages/icons/mdi.html">
+            <a class="nav-link"
+               asp-area="User"
+               asp-controller="Message"
+               asp-action="Inbox">
                 <i class="mdi mdi-emoticon menu-icon"></i>
                 <span class="menu-title">Mesajlarım</span>
             </a>
