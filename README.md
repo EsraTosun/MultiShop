@@ -137,7 +137,3 @@ This project serves as a **comprehensive reference** for:
 
 ---
 
-## 📌 Note
-
-This repository is created **for educational purposes**.  
-The focus is on **architecture, scalability, and technology integration** rather than production-ready perfection.
