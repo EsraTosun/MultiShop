@@ -1,4 +1,4 @@
-﻿
+﻿@model AdminStatisticViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
@@ -11,7 +11,7 @@
                 <div class="media-icon pull-left"><i class="icon-bargraph"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Marka</h5>
-                    <h3>@ViewBag.getBrandCount</h3>
+                    <h3>@Model.BrandCount</h3>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
                 <div class="media-icon pull-left"><i class="icon-wallet"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Ürün</h5>
-                    <h3>@ViewBag.getProductCount</h3>
+                    <h3>@Model.ProductCount</h3>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 <div class="media-icon pull-left"><i class="icon-basket"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Kategori</h5>
-                    <h3>@ViewBag.getCategoryCount</h3>
+                    <h3>@Model.CategoryCount</h3>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <div class="media-icon pull-left"><i class="icon-bargraph"></i> </div>
                 <div class="media-info">
                     <h5>En Pahalı Ürün</h5>
-                    <h3>@ViewBag.getMaxPriceProductName</h3>
+                    <h3>@Model.MaxPriceProductName</h3>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 <div class="media-icon pull-left"><i class="icon-wallet"></i> </div>
                 <div class="media-info">
                     <h5>En Ucuz Ürün</h5>
-                    <h3>@ViewBag.getMinPriceProductName</h3>
+                    <h3>@Model.MinPriceProductName</h3>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
                 <div class="media-icon pull-left"><i class="icon-basket"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Kullanıcı</h5>
-                    <h3>@ViewBag.getUserCount</h3>
+                    <h3>@Model.UserCount</h3>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
                 <div class="media-icon pull-left"><i class="icon-layers"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Yorum</h5>
-                    <h3>@ViewBag.getTotalCommentCount</h3>
+                    <h3>@Model.TotalCommentCount</h3>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
                 <div class="media-icon pull-left"><i class="icon-bargraph"></i> </div>
                 <div class="media-info">
                     <h5>Aktif Yorum</h5>
-                    <h3>@ViewBag.getActiveCommentCount</h3>
+                    <h3>@Model.ActiveCommentCount</h3>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
                 <div class="media-icon pull-left"><i class="icon-wallet"></i> </div>
                 <div class="media-info">
                     <h5>Pasif Yorum</h5>
-                    <h3>@ViewBag.getPassiveCommentCount</h3>
+                    <h3>@Model.PassiveCommentCount</h3>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                 <div class="media-icon pull-left"><i class="icon-basket"></i> </div>
                 <div class="media-info">
                     <h5>İndirim Kuponu Sayısı</h5>
-                    <h3>@ViewBag.getDiscountCouponCount</h3>
+                    <h3>@Model.DiscountCouponCount</h3>
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
                 <div class="media-icon pull-left"><i class="icon-layers"></i> </div>
                 <div class="media-info">
                     <h5>Toplam Mesaj Sayısı</h5>
-                    <h3>@ViewBag.getMessageTotalCount</h3>
+                    <h3>@Model.MessageTotalCount</h3>
                 </div>
             </div>
         </div>

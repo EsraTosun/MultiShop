@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MultiShop.WebUI.Models;
 using MultiShop.WebUI.Services.CommentServices;
 using MultiShop.WebUI.Services.StatisticServices.CatalogStatisticServices;
 using MultiShop.WebUI.Services.StatisticServices.DiscountStatisticServices;
@@ -26,39 +27,26 @@ namespace MultiShop.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var getBrandCount = await _catalogStatisticService.GetBrandCount();
-            var getProductCount = await _catalogStatisticService.GetProductCount();
-            var getCategoryCount = await _catalogStatisticService.GetCategoryCount();
-            var getMaxPriceProductName = await _catalogStatisticService.GetMaxPriceProductName();
-            var getMinPriceProductName = await _catalogStatisticService.GetMinPriceProductName();
+            var model = new AdminStatisticViewModel
+            {
+                BrandCount = await _catalogStatisticService.GetBrandCount(),
+                ProductCount = await _catalogStatisticService.GetProductCount(),
+                CategoryCount = await _catalogStatisticService.GetCategoryCount(),
 
-            var getUserCount = await _userStatisticService.GetUsercount();
+                MaxPriceProductName = await _catalogStatisticService.GetMaxPriceProductName(),
+                MinPriceProductName = await _catalogStatisticService.GetMinPriceProductName(),
 
-            var getTotalCommentCount = await _commentService.GetTotalCommentCount();
-            var getActiveCommentCount = await _commentService.GetActiveCommentCount();
-            var getPassiveCommentCount = await _commentService.GetPAssiveCommentCount();
+                UserCount = await _userStatisticService.GetUsercount(),
 
-            var getDiscountCouponCount = await _discountStatisticService.GetDiscountCouponCount();
+                TotalCommentCount = await _commentService.GetTotalCommentCount(),
+                ActiveCommentCount = await _commentService.GetActiveCommentCount(),
+                PassiveCommentCount = await _commentService.GetPAssiveCommentCount(),
 
-            var getMessageTotalCount = await _messageStatisticService.GetTotalMessageCount();
+                DiscountCouponCount = await _discountStatisticService.GetDiscountCouponCount(),
+                MessageTotalCount = await _messageStatisticService.GetTotalMessageCount()
+            };
 
-            ViewBag.getBrandCount = getBrandCount;
-            ViewBag.getProductCount = getProductCount;
-            ViewBag.getCategoryCount = getCategoryCount;
-            ViewBag.getMaxPriceProductName = getMaxPriceProductName;
-            ViewBag.getMinPriceProductName = getMinPriceProductName;
-
-            ViewBag.getUserCount = getUserCount;
-
-            ViewBag.getTotalCommentCount = getTotalCommentCount;
-            ViewBag.getActiveCommentCount = getActiveCommentCount;
-            ViewBag.getPassiveCommentCount = getPassiveCommentCount;
-
-            ViewBag.getDiscountCouponCount = getDiscountCouponCount;
-
-            ViewBag.getMessageTotalCount = getMessageTotalCount;
-
-            return View();
+            return View(model);
         }
     }
 }
