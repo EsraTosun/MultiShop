@@ -29,4 +29,8 @@
     <ProjectReference Include="..\MultiShop.DtoLayer\MultiShop.DtoLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SignalRHub\" />
+  </ItemGroup>
+
 </Project>

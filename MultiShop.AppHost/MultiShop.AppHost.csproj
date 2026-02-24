@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Services\Message\MultiShop.Message\MultiShop.Message.csproj" />
     <ProjectReference Include="..\Services\Order\Presentation\MultiShop.Order.WebApi\MultiShop.Order.WebApi.csproj" />
     <ProjectReference Include="..\Services\Payment\MultiShop.Payment\MultiShop.Payment.csproj" />
+    <ProjectReference Include="..\Services\SignalRRealTime\MultiShop.SignalRRealTimeApi\MultiShop.SignalRRealTimeApi.csproj" />
   </ItemGroup>
 
 </Project>

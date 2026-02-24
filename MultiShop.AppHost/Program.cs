@@ -1,4 +1,4 @@
-﻿var builder = DistributedApplication.CreateBuilder(args);
+var builder = DistributedApplication.CreateBuilder(args);
 
 var identity = builder.AddProject<Projects.MultiShop_IdentityServer>("identity");
 
@@ -23,5 +23,7 @@ var gateway = builder.AddProject<Projects.MultiShop_OcelotGateway>("gateway")
     .WithReference(payment)
     .WithReference(images)
     .WithReference(message);
+
+builder.AddProject<Projects.MultiShop_SignalRRealTimeApi>("multishop-signalrrealtimeapi");
 
 builder.Build().Run();
