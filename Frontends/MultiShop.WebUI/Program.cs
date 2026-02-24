@@ -153,6 +153,30 @@ builder.Services.AddHttpClient<ICommentService, CommentService>(opt =>
 
 #endregion
 
+#region STATISTIC SERVICES
+
+builder.Services.AddHttpClient<ICatalogStatisticService, CatalogStatisticService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{apiSettings.OcelotUrl}/{apiSettings.Catalog.Path}");
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+
+builder.Services.AddHttpClient<IUserStatisticService, UserStatisticService>(opt =>
+{
+    opt.BaseAddress = new Uri(apiSettings.IdentityServerUrl);
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<IDiscountStatisticService, DiscountStatisticService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{apiSettings.OcelotUrl}/{apiSettings.Discount.Path}");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+builder.Services.AddHttpClient<IMessageStatisticService, MessageStatisticService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{apiSettings.OcelotUrl}/{apiSettings.Message.Path}");
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+#endregion
+
 #region RESOURCE OWNER PASSWORD (AUTH USER)
 
 builder.Services.AddHttpClient<IUserService, UserService>(opt =>

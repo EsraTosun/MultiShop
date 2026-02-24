@@ -1,4 +1,6 @@
 ﻿
+using MultiShop.WebUI.Models;
+
 namespace MultiShop.WebUI.Services.StatisticServices.DiscountStatisticServices
 {
     public class DiscountStatisticService : IDiscountStatisticService
@@ -11,8 +13,12 @@ namespace MultiShop.WebUI.Services.StatisticServices.DiscountStatisticServices
         public async Task<int> GetDiscountCouponCount()
         {
             var responseMessage = await _httpClient.GetAsync("Discounts/GetDiscountCouponCount");
-            var values = await responseMessage.Content.ReadFromJsonAsync<int>();
-            return values;
+
+            var response = await responseMessage
+                .Content
+                .ReadFromJsonAsync<DiscountCouponCountDto>();
+
+            return response!.DiscountCouponCount;
         }
     }
 }
