@@ -30,6 +30,17 @@ namespace MultiShop.WebUI.Services.MessageServices
             var values = await responseMessage.Content.ReadFromJsonAsync<int>();
             return values;
         }
+
+        public async Task<List<ResultInboxMessageDto>> GetLastInboxMessages(string userId, int count)
+        {
+            var responseMessage = await _httpClient.GetAsync(
+                $"UserMessage/GetLastInboxMessages?id={userId}&count={count}");
+
+            var values = await responseMessage.Content
+                .ReadFromJsonAsync<List<ResultInboxMessageDto>>();
+
+            return values;
+        }
     }
 }
 //http://localhost:7078/api/UserMessage/GetMessageSendbox?id=a

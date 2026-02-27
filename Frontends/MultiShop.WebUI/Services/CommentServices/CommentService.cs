@@ -89,5 +89,15 @@ namespace MultiShop.WebUI.Services.CommentServices
 
             return JsonConvert.DeserializeObject<double>(content);
         }
+
+        public async Task<List<ResultCommentDto>> GetLastComments(int count)
+        {
+            var responseMessage =
+                await _httpClient.GetAsync($"comments/GetLastComments?count={count}");
+
+            var jsonData = await responseMessage.Content.ReadAsStringAsync();
+            var values = JsonConvert.DeserializeObject<List<ResultCommentDto>>(jsonData);
+            return values;
+        }
     }
 }

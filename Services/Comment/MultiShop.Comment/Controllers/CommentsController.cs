@@ -88,5 +88,16 @@ namespace MultiShop.Comment.Controllers
             int value = _context.UserComments.Count();
             return Ok(value);
         }
+
+        [HttpGet("GetLastComments")]
+        public IActionResult GetLastComments(int count = 3)
+        {
+            var values = _context.UserComments
+                .OrderByDescending(x => x.CreatedDate)
+                .Take(count)
+                .ToList();
+
+            return Ok(values);
+        }
     }
 }
