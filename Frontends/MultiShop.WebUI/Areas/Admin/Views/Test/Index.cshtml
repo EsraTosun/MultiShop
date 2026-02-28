@@ -2,7 +2,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
-<script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
@@ -12,18 +12,23 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <script type="text/javascript">
-                $(document).ready(() => {
-                    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7266/SignalRHub").build();
-                    $("#connstatus").text(connection.state);
+            <script>
+                $(document).ready(function () {
 
-                    connection.start().then(() => {
-                        $("#connstatus").text(connection.state);
-                        connection.invoke("SendStatisticCount");
-                    }).catch((err) => { console.log(err) });
+                    const connection = new signalR.HubConnectionBuilder()
+                        .withUrl("https://localhost:7266/signalrhub")  // ✅ doğru port
+                        .withAutomaticReconnect()
+                        .build();
 
-                    connection.on("ReceiveCommentCount", (getTotalCommentCount) => {
-                        $("#commentcount").text(getTotalCommentCount);
+                    connection.start()
+                        .then(() => {
+                            $("#connstatus").text(connection.state); 
+                            connection.invoke("SendStatisticCount");
+                        })
+                        .catch(err => console.error(err));
+
+                    connection.on("ReceiveCommentCount", count => {
+                        $("#commentcount").text(count);
                     });
 
                 });
