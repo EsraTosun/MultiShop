@@ -1,7 +1,11 @@
+using MultiShop.Images.Services;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.AddServiceDefaults();
 
 // Add services to the container.
+
+builder.Services.Configure<GCSConfigOptions>(builder.Configuration);
+builder.Services.AddSingleton<ICloudStorageService, CloudStorageService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -9,7 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -18,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
