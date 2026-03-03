@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Services\Order\Presentation\MultiShop.Order.WebApi\MultiShop.Order.WebApi.csproj" />
     <ProjectReference Include="..\Services\Payment\MultiShop.Payment\MultiShop.Payment.csproj" />
     <ProjectReference Include="..\Services\RabbitMQMessage\MultiShop.RabbitMQMessage\MultiShop.RabbitMQMessage.csproj" />
+    <ProjectReference Include="..\Services\RapidApi\MultiShop.RapidApiWebUI\MultiShop.RapidApiWebUI.csproj" />
     <ProjectReference Include="..\Services\SignalRRealTime\MultiShop.SignalRRealTimeApi\MultiShop.SignalRRealTimeApi.csproj" />
   </ItemGroup>
 

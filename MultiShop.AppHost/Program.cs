@@ -30,4 +30,6 @@ builder.AddProject<Projects.MultiShop_Images_WebUI>("multishop-images-webui");
 
 builder.AddProject<Projects.MultiShop_RabbitMQMessage>("multishop-rabbitmqmessage");
 
+builder.AddProject<Projects.MultiShop_RapidApiWebUI>("multishop-rapidapiwebui");
+
 builder.Build().Run();
