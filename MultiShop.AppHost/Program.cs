@@ -28,4 +28,6 @@ builder.AddProject<Projects.MultiShop_SignalRRealTimeApi>("multishop-signalrreal
 
 builder.AddProject<Projects.MultiShop_Images_WebUI>("multishop-images-webui");
 
+builder.AddProject<Projects.MultiShop_RabbitMQMessage>("multishop-rabbitmqmessage");
+
 builder.Build().Run();
