@@ -1,0 +1,32 @@
+﻿@model WeatherViewModel
+@{
+    ViewData["Title"] = "Weather";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container my-5">
+    <h1 class="mb-4">Weather in @Model.City, @Model.Country</h1>
+
+    <div class="card shadow-sm p-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2>@Model.Temperature &deg;@Model.TemperatureUnit</h2>
+                <h5 class="text-muted">@Model.WeatherMain - @Model.WeatherDescription</h5>
+                <img src="@($"https://openweathermap.org/img/wn/{Model.WeatherIcon}@2x.png")" alt="Weather Icon" />
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p><strong>Feels like:</strong> @Model.TemperatureFeelsLike &deg;@Model.TemperatureUnit</p>
+                <p><strong>Humidity:</strong> @Model.Humidity @Model.HumidityUnit</p>
+                <p><strong>Pressure:</strong> @Model.Pressure @Model.PressureUnit</p>
+                <p><strong>Wind:</strong> @Model.WindSpeed @Model.WindUnit (@Model.WindDegree&deg;)</p>
+                <p><strong>Cloudiness:</strong> @Model.Cloudiness @Model.CloudUnit</p>
+                <p><strong>Rain:</strong> @Model.RainAmount @Model.RainUnit</p>
+                <p><strong>Snow:</strong> @Model.SnowAmount @Model.SnowUnit</p>
+                <p><strong>Visibility:</strong> @Model.Visibility @Model.VisibilityUnit</p>
+                <p><strong>Sunrise:</strong> @Model.Sunrise.ToShortTimeString()</p>
+                <p><strong>Sunset:</strong> @Model.Sunset.ToShortTimeString()</p>
+            </div>
+        </div>
+    </div>
+</div>

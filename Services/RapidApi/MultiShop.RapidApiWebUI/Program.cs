@@ -1,8 +1,15 @@
+﻿using MultiShop.RapidApiWebUI.Services.WeatherServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
+builder.Services.Configure<RapidApiOptions>(
+    builder.Configuration.GetSection("RapidApi"));
+
+// 🔹 Weather service ekle
+builder.Services.AddHttpClient<IWeatherService, WeatherService>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
