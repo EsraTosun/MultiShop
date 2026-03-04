@@ -1,0 +1,58 @@
+﻿@model ProductSearchViewModel
+
+<div class="card p-4 shadow-sm mt-4">
+
+    <form method="post">
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+                <input asp-for="Query" class="form-control" placeholder="Ürün adı giriniz..." />
+            </div>
+
+            <div class="col-md-2">
+                <select asp-for="SortBy" class="form-select">
+                    <option value="BEST_MATCH">En İyi Eşleşme</option>
+                    <option value="LOWEST_PRICE">En Düşük Fiyat</option>
+                    <option value="HIGHEST_PRICE">En Yüksek Fiyat</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <input asp-for="MinPrice" class="form-control" placeholder="Min Fiyat" />
+            </div>
+
+            <div class="col-md-2">
+                <input asp-for="MaxPrice" class="form-control" placeholder="Max Fiyat" />
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    Ara
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+@if (Model.Products.Any())
+{
+    <div class="row mt-4">
+        @foreach (var item in Model.Products)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@item.ImageUrl" class="card-img-top" />
+                    <div class="card-body">
+                        <h6>@item.Title</h6>
+                        <p class="text-primary fw-bold">
+                            @item.Price @item.Currency
+                        </p>
+                        <small class="text-muted">@item.Source</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
