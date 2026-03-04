@@ -1,0 +1,20 @@
+﻿@model CurrencyViewModel
+
+<div class="card shadow-sm p-4 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>@Model.FromSymbol → @Model.ToSymbol</h4>
+        <small class="text-muted">
+            @Model.LastUpdateUtc.ToString("dd.MM.yyyy HH:mm")
+        </small>
+    </div>
+
+    <div class="text-center">
+        <h1 class="display-5 text-primary">
+            @Model.ExchangeRate.ToString("N4")
+        </h1>
+
+        <p class="text-muted">
+            Önceki Kapanış: @Model.PreviousClose.ToString("N4")
+        </p>
+    </div>
+</div>

@@ -1,14 +1,19 @@
-﻿using MultiShop.RapidApiWebUI.Services.WeatherServices;
+﻿using MultiShop.RapidApiWebUI.Services.FinanceServices;
+using MultiShop.RapidApiWebUI.Services.WeatherServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.Configure<RapidApiOptions>(
-    builder.Configuration.GetSection("RapidApi"));
+builder.Services.Configure<WeatherApiOptions>(
+    builder.Configuration.GetSection("RapidApiWeather"));
+
+builder.Services.Configure<FinanceApiOptions>(
+    builder.Configuration.GetSection("RapidApiFinance"));
 
 // 🔹 Weather service ekle
 builder.Services.AddHttpClient<IWeatherService, WeatherService>();
+builder.Services.AddScoped<IFinanceService, FinanceService>();
 
 builder.Services.AddControllersWithViews();
 

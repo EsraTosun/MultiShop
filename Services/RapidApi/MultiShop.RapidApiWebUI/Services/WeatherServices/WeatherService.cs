@@ -6,9 +6,9 @@ namespace MultiShop.RapidApiWebUI.Services.WeatherServices
     public class WeatherService : IWeatherService
     {
         private readonly HttpClient _httpClient;
-        private readonly RapidApiOptions _options;
+        private readonly WeatherApiOptions _options;
 
-        public WeatherService(HttpClient httpClient, IOptions<RapidApiOptions> options)
+        public WeatherService(HttpClient httpClient, IOptions<WeatherApiOptions> options)
         {
             _httpClient = httpClient;
             _options = options.Value;
