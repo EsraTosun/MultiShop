@@ -26,8 +26,6 @@ var gateway = builder.AddProject<Projects.MultiShop_OcelotGateway>("gateway")
 
 builder.AddProject<Projects.MultiShop_SignalRRealTimeApi>("multishop-signalrrealtimeapi");
 
-builder.AddProject<Projects.MultiShop_Images_WebUI>("multishop-images-webui");
-
 builder.AddProject<Projects.MultiShop_RabbitMQMessage>("multishop-rabbitmqmessage");
 
 builder.AddProject<Projects.MultiShop_RapidApiWebUI>("multishop-rapidapiwebui");

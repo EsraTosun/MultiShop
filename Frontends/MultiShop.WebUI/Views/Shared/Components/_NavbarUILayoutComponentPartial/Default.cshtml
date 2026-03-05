@@ -1,4 +1,7 @@
-﻿@model List<ResultCategoryDto>
+﻿@using MultiShop.WebUI.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> Localizer
+
+@model List<ResultCategoryDto>
 <div class="container-fluid bg-dark mb-30">
     <div class="row px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
@@ -26,8 +29,8 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="/Default/Index/" class="nav-item nav-link">Ana Sayfa</a>
-                        <a href="shop.html" class="nav-item nav-link">Ürünler</a>
+                        <a href="/Default/Index/" class="nav-item nav-link">@Localizer["Ana Sayfa"]</a>
+                        <a href="shop.html" class="nav-item nav-link">@Localizer["Ürünler"]</a>
                         <a href="detail.html" class="nav-item nav-link">Ürün Detayları</a>
                         <a href="detail.html" class="nav-item nav-link">Günün Fırsatı</a>
                         <div class="nav-item dropdown">

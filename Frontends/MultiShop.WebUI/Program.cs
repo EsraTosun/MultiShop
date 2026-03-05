@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Razor;
 using MultiShop.WebUI.Handlers;
 using MultiShop.WebUI.Services.BasketServices;
 using MultiShop.WebUI.Services.CargoServices.CargoCompanyServices;
@@ -226,6 +227,15 @@ builder.Services.AddHttpClient<IMessageService, MessageService>(opt =>
 
 #endregion
 
+builder.Services.AddLocalization(opt =>
+{
+    opt.ResourcesPath = "Resources";
+});
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
 #region Pipeline
 
 var app = builder.Build();
@@ -242,6 +252,15 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+var supportedCultures = new[] { "tr", "en", "fr", "de", "it" };
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("tr")
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 app.MapControllerRoute(
     name: "areas",
